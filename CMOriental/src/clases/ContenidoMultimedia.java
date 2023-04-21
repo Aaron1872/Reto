@@ -10,7 +10,7 @@ public class ContenidoMultimedia{
 	//atributos
 	private int codigo;
 	private String titulo;
-	private String autor;
+	private Autor autor;
 	private LocalDate añoInicio;
 	private String estado;
 	private float puntuacion;
