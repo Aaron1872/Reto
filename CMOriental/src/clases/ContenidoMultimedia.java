@@ -12,7 +12,7 @@ public class ContenidoMultimedia{
 	private String titulo;
 	private Autor autor;
 	private LocalDate añoInicio;
-	private String estado;
+	private Estado estado;
 	private float puntuacion;
 	//get &set
 	public int getCodigo() {
@@ -27,10 +27,10 @@ public class ContenidoMultimedia{
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
 	public LocalDate getAñoInicio() {
@@ -39,10 +39,10 @@ public class ContenidoMultimedia{
 	public void setAñoInicio(LocalDate añoInicio) {
 		this.añoInicio = añoInicio;
 	}
-	public String getEstado() {
+	public Estado getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
 	public float getPuntuacion() {

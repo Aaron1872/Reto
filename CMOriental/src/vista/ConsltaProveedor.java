@@ -41,9 +41,9 @@ public class ConsltaProveedor extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblActor = new JLabel("ACTOR");
+			JLabel lblActor = new JLabel("PROVEEDOR");
 			lblActor.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
-			lblActor.setBounds(10, 11, 79, 29);
+			lblActor.setBounds(10, 11, 98, 29);
 			contentPanel.add(lblActor);
 		}
 		
@@ -51,9 +51,9 @@ public class ConsltaProveedor extends JDialog {
 		btnConsultas.setBounds(396, 35, 87, 29);
 		contentPanel.add(btnConsultas);
 		
-		JComboBox comboActor = new JComboBox();
-		comboActor.setBounds(10, 64, 355, 43);
-		contentPanel.add(comboActor);
+		JComboBox comboProveedor = new JComboBox();
+		comboProveedor.setBounds(10, 64, 355, 43);
+		contentPanel.add(comboProveedor);
 		
 		JButton btnVolver = new JButton("Volver");
 		btnVolver.setBounds(396, 78, 87, 29);

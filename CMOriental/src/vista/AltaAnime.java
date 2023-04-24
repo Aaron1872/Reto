@@ -25,7 +25,6 @@ public class AltaAnime extends JDialog {
 	private JTextField textTipo;
 	private JTextField textCapitulos;
 	private JTextField textTemporadas;
-	private JTextField textEstudio;
 	private JTable tableActores;
 
 	/**
@@ -147,11 +146,6 @@ public class AltaAnime extends JDialog {
 		textTemporadas.setBounds(121, 409, 279, 20);
 		contentPanel.add(textTemporadas);
 		
-		textEstudio = new JTextField();
-		textEstudio.setColumns(10);
-		textEstudio.setBounds(123, 443, 279, 20);
-		contentPanel.add(textEstudio);
-		
 		JComboBox comboEstado = new JComboBox();
 		comboEstado.setBounds(123, 260, 279, 22);
 		contentPanel.add(comboEstado);
@@ -183,6 +177,10 @@ public class AltaAnime extends JDialog {
 		tableActores = new JTable();
 		tableActores.setBounds(123, 493, 279, 123);
 		contentPanel.add(tableActores);
+		
+		JComboBox comboEstudio = new JComboBox();
+		comboEstudio.setBounds(123, 442, 279, 22);
+		contentPanel.add(comboEstudio);
 		
 	}
 }
