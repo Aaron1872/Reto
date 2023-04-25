@@ -1,0 +1,17 @@
+package principal;
+
+import modelo.Dao;
+import modelo.DaoImplementacionBD;
+import vista.VentanaPrincipal;
+
+public class Principal {
+
+	public static void main(String[] args) {
+		Dao dao = new DaoImplementacionBD();
+		
+		VentanaPrincipal principal = new VentanaPrincipal(dao);
+		principal.setVisible(true);
+
+	}
+  
+}

@@ -61,10 +61,10 @@ public class AltaActor extends JDialog {
 			contentPanel.add(lblNombre);
 		}
 		{
-			JLabel lblA = new JLabel("Fecha Nacimiento: ");
-			lblA.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
-			lblA.setBounds(10, 177, 131, 29);
-			contentPanel.add(lblA);
+			JLabel lblFecha = new JLabel("Fecha Nacimiento: ");
+			lblFecha.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+			lblFecha.setBounds(10, 177, 131, 29);
+			contentPanel.add(lblFecha);
 		}
 		{
 			JLabel lblLugarNacimiento = new JLabel("Lugar Nacimiento: ");

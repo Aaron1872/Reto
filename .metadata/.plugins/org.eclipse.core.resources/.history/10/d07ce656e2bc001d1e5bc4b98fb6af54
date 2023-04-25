@@ -1,0 +1,80 @@
+package ventanas;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import javax.swing.UIManager;
+
+public class Ventana1 extends JFrame implements ActionListener{
+
+	private JPanel contentPane;
+	private JTextField textField;
+	private JButton btnSiguiente;
+	private JButton btnSalir;
+
+
+	public Ventana1() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 527, 216);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 204));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Introduce tu nombre: ");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNewLabel.setBounds(33, 49, 214, 34);
+		contentPane.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setForeground(new Color(255, 255, 255));
+		textField.setBackground(new Color(0, 0, 0));
+		textField.setBounds(245, 58, 152, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.setForeground(new Color(255, 255, 255));
+		btnSiguiente.setBackground(new Color(0, 0, 0));
+		btnSiguiente.setFont(new Font("Goudy Old Style", Font.BOLD, 17));
+		btnSiguiente.setBounds(71, 113, 131, 23);
+		btnSiguiente.addActionListener(this);
+		contentPane.add(btnSiguiente);
+		
+		btnSalir = new JButton("Salir");
+		btnSalir.setForeground(Color.WHITE);
+		btnSalir.setFont(new Font("Goudy Old Style", Font.BOLD, 17));
+		btnSalir.setBackground(Color.BLACK);
+		btnSalir.setBounds(301, 113, 131, 23);
+		btnSalir.addActionListener(this);
+		contentPane.add(btnSalir);
+	}
+	
+	
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource().equals(btnSiguiente)) {
+				siguiente();
+			}else {
+				this.dispose();
+			}
+		}
+
+
+		private void siguiente() {
+			Ventana2 ven2 = new Ventana2(null, this);
+			ven2.setVisible(true);
+			
+		}
+
+}

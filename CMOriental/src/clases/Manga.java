@@ -9,6 +9,7 @@ public class Manga extends ContenidoMultimedia{
 	private String periodicidad;
 	private float precio;
 	private int Stock;
+	private Proveedor prov;
 	//get & set
 	public int getIsbn() {
 		return isbn;
@@ -45,5 +46,11 @@ public class Manga extends ContenidoMultimedia{
 	}
 	public void setStock(int stock) {
 		Stock = stock;
+	}	
+	public final Proveedor getProv() {
+		return prov;
+	}
+	public final void setProv(Proveedor prov) {
+		this.prov = prov;
 	}
 }

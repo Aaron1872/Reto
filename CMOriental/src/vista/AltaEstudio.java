@@ -41,10 +41,10 @@ public class AltaEstudio extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblNewLabel = new JLabel("Estudio");
-			lblNewLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
-			lblNewLabel.setBounds(10, 11, 85, 35);
-			contentPanel.add(lblNewLabel);
+			JLabel lblEstudio = new JLabel("Estudio");
+			lblEstudio.setFont(new Font("Comic Sans MS", Font.BOLD, 19));
+			lblEstudio.setBounds(10, 11, 85, 35);
+			contentPanel.add(lblEstudio);
 		}
 		{
 			JLabel lblNombre = new JLabel("Nombre");

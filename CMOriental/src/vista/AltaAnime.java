@@ -106,10 +106,10 @@ public class AltaAnime extends JDialog {
 		lblEstudio.setBounds(10, 439, 86, 23);
 		contentPanel.add(lblEstudio);
 		
-		JLabel lblAnime_4_4_2_1 = new JLabel("Actores");
-		lblAnime_4_4_2_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblAnime_4_4_2_1.setBounds(10, 486, 86, 23);
-		contentPanel.add(lblAnime_4_4_2_1);
+		JLabel lblActores = new JLabel("Actores");
+		lblActores.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+		lblActores.setBounds(10, 486, 86, 23);
+		contentPanel.add(lblActores);
 		
 		textCodigo = new JTextField();
 		textCodigo.setBounds(123, 71, 279, 20);

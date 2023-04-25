@@ -1,0 +1,52 @@
+package clases;
+
+import java.time.LocalDate;
+
+import utilidades.Utilidades;
+
+public class Autor {
+
+	//atributos
+	private String dni;
+	private String nombre;
+	private LocalDate fechaNac;
+	private String ciudadNac;
+	//get & set
+	public String getDni() {
+		return dni;
+	}
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public LocalDate getFechaNac() {
+		return fechaNac;
+	}
+	public void setFechaNac(LocalDate fechaNac) {
+		this.fechaNac = fechaNac;
+	}
+	public String getCiudadNac() {
+		return ciudadNac;
+	}
+	public void setCiudadNac(String ciudadNac) {
+		this.ciudadNac = ciudadNac;
+	}
+	//metodos propios
+	public void setDatos() {
+		this.dni=Utilidades.introducirCadena("Introduce el DNI del actor de voz: ");
+		this.nombre=Utilidades.introducirCadena("Inserte el Nombre del Actor: ");
+		this.fechaNac=Utilidades.pidoFechaDMA("Introduce la fecha de nacimienton del Actor: ");
+		this.ciudadNac=Utilidades.introducirCadena("Introduce la ciudad de nacimiento del Actor");
+	}
+	public void getDatos() {
+		System.out.println("DNI: "+this.dni+"\n"
+						+ "Nombre: "+this.nombre+"\n"
+						+ "Fecha de Nacimiento: "+this.fechaNac+"\n"
+						+ "Ciudad Nacimiento: "+this.ciudadNac+"\n");
+	}
+}

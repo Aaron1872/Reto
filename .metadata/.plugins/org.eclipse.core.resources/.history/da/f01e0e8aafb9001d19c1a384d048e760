@@ -1,0 +1,79 @@
+package ventanas;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+
+public class Ventana2 extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
+
+
+	/**
+	 * Create the dialog.
+	 */
+	public Ventana2() {
+		setBounds(100, 100, 706, 517);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		{
+			JButton btnSi = new JButton("SI");
+			btnSi.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					cerrar();
+					
+					
+				}
+			});
+			btnSi.setBounds(159, 327, 74, 53);
+			contentPanel.add(btnSi);
+			btnSi.setActionCommand("Cancel");
+		}
+		
+		JButton btnNo = new JButton("No");
+		btnNo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cerrar();
+				abrirVentanaPrinc();
+			}
+		});
+		btnNo.setActionCommand("Cancel");
+		btnNo.setBounds(422, 327, 74, 53);
+		contentPanel.add(btnNo);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\1dam\\Downloads\\7fefa63ee14e923417697e9aa33976e9.jpg"));
+		lblNewLabel_1.setBounds(45, 11, 601, 433);
+		contentPanel.add(lblNewLabel_1);
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		}
+	}
+
+	private void cerrar() {
+		this.dispose();
+		
+	}
+	private void abrirVentanaPrinc() {
+		VentanaPrincipal ventanaPrinc = new VentanaPrincipal();
+		ventanaPrinc.setVisible(rootPaneCheckingEnabled);
+		
+	}
+}

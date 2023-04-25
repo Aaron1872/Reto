@@ -19,7 +19,7 @@ public class AltaAutor extends JDialog {
 	private JTextField textDNI;
 	private JTextField textNombre;
 	private JTextField textCiudad;
-	private JTextField textField_3;
+	private JTextField textFecha;
 
 	/**
 	 * Launch the application.
@@ -104,9 +104,9 @@ public class AltaAutor extends JDialog {
 		textCiudad.setBounds(181, 162, 319, 20);
 		contentPanel.add(textCiudad);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(181, 199, 270, 151);
-		contentPanel.add(textField_3);
+		textFecha = new JTextField();
+		textFecha.setColumns(10);
+		textFecha.setBounds(181, 199, 270, 151);
+		contentPanel.add(textFecha);
 	}
 }
