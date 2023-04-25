@@ -1,0 +1,13 @@
+package clases;
+
+public class Manga extends ContenidoMultimedia{
+
+	//atributos
+	private int isbn;
+	private int numTomos;
+	private String editorial;
+	private String periodicidad;
+	private float precio;
+	private int Stock;
+	//get & set
+}

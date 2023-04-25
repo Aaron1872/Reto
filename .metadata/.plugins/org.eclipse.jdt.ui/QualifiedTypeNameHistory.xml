@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="ventanas.ErrorInicio"/>
+    <fullyQualifiedTypeName name="ventanas.VentanaInicio"/>
+    <fullyQualifiedTypeName name="ventanas.InicioSesion"/>
+    <fullyQualifiedTypeName name="javax.swing.Action"/>
+    <fullyQualifiedTypeName name="javax.swing.ButtonGroup"/>
+    <fullyQualifiedTypeName name="java.sql.Connection"/>
+    <fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+    <fullyQualifiedTypeName name="java.sql.DriverManager"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.protocol.x.StatementExecuteOk"/>
+    <fullyQualifiedTypeName name="java.sql.Date"/>
+    <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
+    <fullyQualifiedTypeName name="principal.Principal"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+    <fullyQualifiedTypeName name="com.mysql.cj.xdevapi.Result"/>
+    <fullyQualifiedTypeName name="vista.VentanaVerCoches"/>
+    <fullyQualifiedTypeName name="modelo.Dao"/>
+    <fullyQualifiedTypeName name="vista.VentanaCoche"/>
+    <fullyQualifiedTypeName name="clases.Coche"/>
+    <fullyQualifiedTypeName name="java.lang.Float"/>
+    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+    <fullyQualifiedTypeName name="clases.Propietario"/>
+    <fullyQualifiedTypeName name="vista.VentanaPropietario"/>
+    <fullyQualifiedTypeName name="vista.VentanaPrincipal"/>
+    <fullyQualifiedTypeName name="vista.VentanaConsultaPropietarios"/>
+    <fullyQualifiedTypeName name="vista.VentanaConsultaCoches"/>
+    <fullyQualifiedTypeName name="modelo.DaoImplementacionBD"/>
+    <fullyQualifiedTypeName name="com.toedter.calendar.JDateChooser"/>
+    <fullyQualifiedTypeName name="utilidades.Utilidades"/>
+    <fullyQualifiedTypeName name="clases.ContenidoMultimedia"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="clases.Anime"/>
+    <fullyQualifiedTypeName name="java.io.Serializable"/>
+    <fullyQualifiedTypeName name="clases.Estudio"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="clases.Proveedor"/>
+    <fullyQualifiedTypeName name="vista.InicioSesionRegistro"/>
+</qualifiedTypeNameHistroy>
