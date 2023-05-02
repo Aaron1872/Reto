@@ -1,0 +1,112 @@
+package vista;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextPane;
+import javax.swing.JTextField;
+
+public class AltaActor extends JDialog {
+
+	private final JPanel contentPanel = new JPanel();
+	private JTextField textDNI;
+	private JTextField textNombre;
+	private JTextField textLugar;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		
+		try {
+			AltaActor dialog = new AltaActor();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public AltaActor() {
+		setBounds(100, 100, 509, 300);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		{
+			JLabel lblDni = new JLabel("DNI: ");
+			lblDni.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+			lblDni.setBounds(10, 57, 48, 29);
+			contentPanel.add(lblDni);
+		}
+		{
+			JLabel lblActor = new JLabel("ACTOR");
+			lblActor.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+			lblActor.setBounds(10, 11, 79, 29);
+			contentPanel.add(lblActor);
+		}
+		{
+			JLabel lblNombre = new JLabel("Nombre: ");
+			lblNombre.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+			lblNombre.setBounds(10, 97, 79, 29);
+			contentPanel.add(lblNombre);
+		}
+		{
+			JLabel lblFecha = new JLabel("Fecha Nacimiento: ");
+			lblFecha.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+			lblFecha.setBounds(10, 177, 131, 29);
+			contentPanel.add(lblFecha);
+		}
+		{
+			JLabel lblLugarNacimiento = new JLabel("Lugar Nacimiento: ");
+			lblLugarNacimiento.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
+			lblLugarNacimiento.setBounds(10, 137, 131, 29);
+			contentPanel.add(lblLugarNacimiento);
+		}
+		
+		JTextPane txtpnCalendario = new JTextPane();
+		txtpnCalendario.setText("Calendario");
+		txtpnCalendario.setBounds(151, 186, 236, 64);
+		contentPanel.add(txtpnCalendario);
+		
+		textDNI = new JTextField();
+		textDNI.setBounds(68, 63, 319, 20);
+		contentPanel.add(textDNI);
+		textDNI.setColumns(10);
+		
+		textNombre = new JTextField();
+		textNombre.setColumns(10);
+		textNombre.setBounds(78, 103, 309, 20);
+		contentPanel.add(textNombre);
+		
+		textLugar = new JTextField();
+		textLugar.setColumns(10);
+		textLugar.setBounds(145, 146, 242, 20);
+		contentPanel.add(textLugar);
+		
+		JButton btnAlta = new JButton("Alta");
+		btnAlta.setBounds(403, 143, 80, 20);
+		contentPanel.add(btnAlta);
+		
+		JButton btnModi = new JButton("Modi");
+		btnModi.setBounds(403, 174, 80, 20);
+		contentPanel.add(btnModi);
+		
+		JButton btnBaja = new JButton("Baja");
+		btnBaja.setBounds(403, 205, 80, 20);
+		contentPanel.add(btnBaja);
+		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.setBounds(403, 236, 80, 20);
+		contentPanel.add(btnVolver);
+	}
+}
