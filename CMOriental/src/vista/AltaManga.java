@@ -7,14 +7,19 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Dao;
+import modelo.DaoImplementacion;
+import clases.Manga;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
-public class AltaManga extends JDialog {
+public class AltaManga extends JDialog implements ActionListener{
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textCodigo;
@@ -26,24 +31,27 @@ public class AltaManga extends JDialog {
 	private JTextField textPeriozidad;
 	private JTextField textPrecio;
 	private JTextField textStock;
-
+	private Dao dao;
+	private JButton btnAlta;
+	private JButton btnModi ;
+	private JButton btnBaja ;
+	private JButton btnVolver;
+	private Manga manga;
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			AltaManga dialog = new AltaManga();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
+	 * @param b 
+	 * @param dao 
+	 * @param admin 
 	 */
-	public AltaManga() {
+	public AltaManga(boolean b, Dao dao, Manga man) {
+	
+		this.dao=dao;
+		this.setModal(b);
+		manga=man;
 		getContentPane().setLayout(null);
 		
 		JLabel lblAnime = new JLabel("MANGA");
@@ -147,6 +155,7 @@ public class AltaManga extends JDialog {
 		contentPanel.add(textPeriozidad);
 		
 		JComboBox comboEstado = new JComboBox();
+		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"", "Proximamente", "En emision", "Finalizado"}));
 		comboEstado.setBounds(123, 260, 279, 22);
 		contentPanel.add(comboEstado);
 		
@@ -154,24 +163,24 @@ public class AltaManga extends JDialog {
 		comboAutor.setBounds(123, 168, 279, 22);
 		contentPanel.add(comboAutor);
 		
-		JButton btnAlta = new JButton("Alta");
-		btnAlta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnAlta = new JButton("Alta");
 		btnAlta.setBounds(412, 462, 80, 20);
+		btnAlta.addActionListener(this);
 		contentPanel.add(btnAlta);
 		
-		JButton btnModi = new JButton("Modi");
+	    btnModi = new JButton("Modi");
 		btnModi.setBounds(412, 489, 80, 20);
+		btnModi.addActionListener(this);
 		contentPanel.add(btnModi);
 		
-		JButton btnBaja = new JButton("Baja");
+		btnBaja = new JButton("Baja");
 		btnBaja.setBounds(412, 520, 80, 20);
+		btnBaja.addActionListener(this);
 		contentPanel.add(btnBaja);
 		
-		JButton btnVolver = new JButton("Volver");
+		btnVolver = new JButton("Volver");
 		btnVolver.setBounds(412, 551, 80, 20);
+		btnVolver.addActionListener(this);
 		contentPanel.add(btnVolver);
 		
 		JComboBox comboEditorial = new JComboBox();
@@ -201,6 +210,52 @@ public class AltaManga extends JDialog {
 		textStock.setColumns(10);
 		textStock.setBounds(123, 508, 279, 20);
 		contentPanel.add(textStock);
+		
+		if(manga==null) {
+			btnBaja.setEnabled(false);
+			btnModi.setEnabled(false);
+		}else {
+			btnAlta.enable(false);
+		}
+		
+		
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource().equals(btnAlta)) {
+			darAlta();
+		}
+		if(e.getSource().equals(btnVolver)) {
+			volver();
+		}
+	}
+	
+	private void cerrar() {
+		this.dispose();
+	}
+
+	private void volver() {
+		cerrar();
+		dao = new DaoImplementacion();
+		Admin ad = new Admin(dao);
+		ad.setVisible(true);
+	}
+	
+	private void darAlta() {
+		// TODO Auto-generated method stub
+		/*Manga man = new Manga();
+		man.setCodigo(textCodigo.getText());
+		man.setTitulo(textTitulo.getText());
+		man.setAñoInicio(null);
+		man.setPuntuacion(textPuntuacion.get);
+		man.setIsbn(textISBN);
+		man.setPeriodicidad(textPeriozidad.getText());
+		man.setNumTomos(textTomos);
+		man.setPrecio(textPrecio);
+		man.setStock(textStock);*/
 		
 	}
 }

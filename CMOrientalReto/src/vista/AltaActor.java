@@ -7,36 +7,54 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import clases.Actor;
+import clases.Proveedor;
+import modelo.Dao;
+import modelo.DaoImplementacion;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
 
-public class AltaActor extends JDialog {
+public class AltaActor extends JDialog implements ActionListener{
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textDNI;
 	private JTextField textNombre;
 	private JTextField textLugar;
-
+	private Dao dao;
+	private JButton btnVolver;
+	private JButton btnBaja;
+	private JButton btnModi;
+	private JButton btnAlta;
+	private JTextField textFecha;
+	private Actor act;
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		
-		try {
-			AltaActor dialog = new AltaActor();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * Create the dialog.
+	 * @param object 
+	 * @param dao 
+	 * @param b 
 	 */
-	public AltaActor() {
+	public AltaActor(boolean b, Dao dao, Actor object) {
+		this.dao=dao;
+		act=object;
+		this.setModal(b);
 		setBounds(100, 100, 509, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -73,11 +91,6 @@ public class AltaActor extends JDialog {
 			contentPanel.add(lblLugarNacimiento);
 		}
 		
-		JTextPane txtpnCalendario = new JTextPane();
-		txtpnCalendario.setText("Calendario");
-		txtpnCalendario.setBounds(151, 186, 236, 64);
-		contentPanel.add(txtpnCalendario);
-		
 		textDNI = new JTextField();
 		textDNI.setBounds(68, 63, 319, 20);
 		contentPanel.add(textDNI);
@@ -93,20 +106,141 @@ public class AltaActor extends JDialog {
 		textLugar.setBounds(145, 146, 242, 20);
 		contentPanel.add(textLugar);
 		
-		JButton btnAlta = new JButton("Alta");
+		btnAlta = new JButton("Alta");
 		btnAlta.setBounds(403, 143, 80, 20);
+		btnAlta.addActionListener(this);
 		contentPanel.add(btnAlta);
 		
-		JButton btnModi = new JButton("Modi");
+		btnModi = new JButton("Modi");
 		btnModi.setBounds(403, 174, 80, 20);
+		btnModi.addActionListener(this);
 		contentPanel.add(btnModi);
 		
-		JButton btnBaja = new JButton("Baja");
+		btnBaja = new JButton("Baja");
 		btnBaja.setBounds(403, 205, 80, 20);
+		btnBaja.addActionListener(this);
 		contentPanel.add(btnBaja);
 		
-		JButton btnVolver = new JButton("Volver");
+		btnVolver = new JButton("Volver");
 		btnVolver.setBounds(403, 236, 80, 20);
+		btnVolver.addActionListener(this);
 		contentPanel.add(btnVolver);
+		
+		textFecha = new JTextField();
+		textFecha.setColumns(10);
+		textFecha.setBounds(145, 183, 242, 20);
+		contentPanel.add(textFecha);
+		
+		if(act==null) {
+			btnBaja.setEnabled(false);
+			btnModi.setEnabled(false);
+		}else {
+			btnAlta.setEnabled(false);
+			textDNI.enable(false);
+			CargarActor(act);
+		}
+		
+		
+		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource().equals(btnAlta)) {
+			altaActor();	
+			
+		}
+		if(e.getSource().equals(btnModi)) {
+			modActor(act);
+		}
+		if(e.getSource().equals(btnBaja)) {
+			baja(act);
+		}
+		if(e.getSource().equals(btnVolver)) {
+			volver();
+		}
+	}
+	
+	private  boolean validar() {
+		boolean bien=false;
+		if(textDNI.getText().equalsIgnoreCase(null) && textNombre.getText().equalsIgnoreCase(null) && textFecha.getText().equalsIgnoreCase(null) && textLugar.getText().equalsIgnoreCase(null)) {
+			bien = true;
+		}
+		
+		
+		
+		
+		return bien;
+	}
+	
+	private void baja(Actor actt) {
+		// TODO Auto-generated method stub
+		String dni = actt.getDni();
+		dao.bajaActor(dni);
+		JOptionPane.showMessageDialog(null, "Actor borrado correctamente","Borrado",JOptionPane.INFORMATION_MESSAGE);
+		volver();
+	}
+	
+	private void modActor(Actor act) {
+		// TODO Auto-generated method stub
+		
+		String dni = act.getDni();
+		if(validar()) {
+			Actor actt = new Actor();
+			actt.setNombre(textNombre.getText());
+			actt.setFechaNac(LocalDate.parse(textFecha.getText()));
+			actt.setCiudadNac(textLugar.getText());
+			
+			dao.modiActor(dni, actt);
+			limpiar();
+			JOptionPane.showMessageDialog(null, "Actor modificado correctamente","Modificado",JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(null, "No puedes dejar parametros vacios", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+	}
+	private void altaActor() {
+		// TODO Auto-generated method stub
+		
+		DateTimeFormatter formateador= DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		if(validar()) {
+			
+		Actor act = new Actor();
+		act.setDni(textDNI.getText());
+		act.setNombre(textNombre.getText());
+		act.setFechaNac(LocalDate.parse(textFecha.getText(), formateador));
+		act.setCiudadNac(textLugar.getText());
+		dao.altaActor(act);
+		
+		limpiar();
+		
+		}else {
+			JOptionPane.showMessageDialog(null, "No puedes dejar parametros vacios", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+
+	public void CargarActor(Actor act) {
+		
+		textDNI.setText(act.getDni());
+		textNombre.setText(act.getNombre());
+		textFecha.setText(act.getFechaNac().toString());
+		textLugar.setText(act.getCiudadNac());
+		
+		
+	}
+	private void volver() {
+		this.dispose();
+	}
+
+	
+	
+	private void limpiar() {
+		// TODO Auto-generated method stub
+		textDNI.setText(null);
+		textNombre.setText(null);
+		textLugar.setText(null);
+		textFecha.setText(null);
 	}
 }

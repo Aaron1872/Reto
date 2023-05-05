@@ -9,7 +9,7 @@ public class Principal {
 	public static void main(String[] args) {
 		Dao dao = new DaoImplementacion();
 		
-		InicioSesionRegistro principal = new InicioSesionRegistro();
+		InicioSesionRegistro principal = new InicioSesionRegistro(dao);
 		principal.setVisible(true);
 
 	}

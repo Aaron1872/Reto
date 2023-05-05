@@ -7,19 +7,33 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Dao;
+import clases.Usuarios;
+
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-public class RegistrarseUsuario extends JDialog {
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+
+public class RegistrarseUsuario extends JDialog implements ActionListener{
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField tIntroNombre;
 	private JTextField tIntroEmal;
 	private JTextField tIntroApellido;
 	private JTextField tIntroNombreU;
-	private JTextField tIntroContraseña;
-
+	private JButton btnRegistrar;
+	private JButton btnVolver;
+	private Dao dao;
+	private JPasswordField tIntroContraseña;
 	/**
 	 * Launch the application.
 	 */
@@ -30,7 +44,11 @@ public class RegistrarseUsuario extends JDialog {
 	 * @param b 
 	 * @param inicioSesionRegistro 
 	 */
-	public RegistrarseUsuario(InicioSesionRegistro inicioSesionRegistro, boolean b) {
+	public RegistrarseUsuario(InicioSesionRegistro vent, boolean modal, Dao dao) {
+		super(vent);
+		this.dao=dao;
+		this.setModal(modal);
+		
 		setBounds(100, 100, 461, 413);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -87,14 +105,77 @@ public class RegistrarseUsuario extends JDialog {
 		lblNewLabel_1_1_1_1_1.setBounds(39, 276, 103, 17);
 		contentPanel.add(lblNewLabel_1_1_1_1_1);
 		
-		tIntroContraseña = new JTextField();
-		tIntroContraseña.setColumns(10);
+		btnRegistrar = new JButton("Registrar");
+		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnRegistrar.setBounds(321, 332, 97, 31);
+		btnRegistrar.addActionListener(this);
+		contentPanel.add(btnRegistrar);
+		
+		tIntroContraseña = new JPasswordField();
 		tIntroContraseña.setBounds(164, 276, 201, 20);
 		contentPanel.add(tIntroContraseña);
 		
-		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnRegistrar.setBounds(321, 332, 97, 31);
-		contentPanel.add(btnRegistrar);
+		btnVolver = new JButton("volver");
+		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnVolver.setBounds(39, 332, 97, 31);
+		btnVolver.addActionListener(this);
+		contentPanel.add(btnVolver);
+		
 	}
+	
+		
+		private String  generarCodigo() {
+			// TODO Auto-generated method stub
+			
+		    int i = 0;
+			i++;
+			String codigo=String.format("%04d",i);
+			
+			return codigo;
+			
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getSource().equals(btnRegistrar)) {
+				registroUsuario();
+			}
+			if(e.getSource().equals(btnVolver)) {
+				volver();
+			}
+		}
+
+		private void volver() {
+			// TODO Auto-generated method stub
+			this.dispose();
+			InicioSesionRegistro ini = new InicioSesionRegistro(dao);
+			ini.setVisible(true);
+			
+		}
+		private void registroUsuario() {
+			// TODO Auto-generated method stub
+			Usuarios usu;
+			usu = new Usuarios();
+			
+			
+			usu.setEmail(tIntroEmal.getText());
+			usu.setNombre(tIntroNombre.getText());
+			usu.setApellido(tIntroApellido.getText());
+			usu.setContraseña(tIntroContraseña.getText());
+			
+			dao.altaUsuario(usu);
+			
+			limpiar();
+		}
+
+
+		private void limpiar() {
+			// TODO Auto-generated method stub
+			tIntroEmal.setText(null);
+			tIntroNombre.setText(null);
+			tIntroApellido.setText(null);
+			tIntroContraseña.setText(null);
+			tIntroNombreU.setText(null);
+		}
 }
