@@ -58,13 +58,19 @@ public class InicioSesionRegistro extends JFrame implements ActionListener{
 
 	private void registrarse() {
 		// TODO Auto-generated method stub
+		cerrar();
 		RegistrarseUsuario regis = new RegistrarseUsuario(this,true,dao);
 		regis.setVisible(true);
 		
 	}
+	
+	private void cerrar() {
+		this.dispose();
+	}
 
 	private void inicioSesion() {
 		// TODO Auto-generated method stub
+		cerrar();
 		IniciarSesion ini = new IniciarSesion(this,true,dao);
 		ini.setVisible(true);
 	}

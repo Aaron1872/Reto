@@ -31,6 +31,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 	private JTextField tIntroApellido;
 	private JTextField tIntroNombreU;
 	private JButton btnRegistrar;
+	private JButton btnVolver;
 	private Dao dao;
 	private JPasswordField tIntroContraseña;
 	/**
@@ -47,6 +48,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		super(vent);
 		this.dao=dao;
 		this.setModal(modal);
+		
 		setBounds(100, 100, 461, 413);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -113,6 +115,12 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		tIntroContraseña.setBounds(164, 276, 201, 20);
 		contentPanel.add(tIntroContraseña);
 		
+		btnVolver = new JButton("volver");
+		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnVolver.setBounds(39, 332, 97, 31);
+		btnVolver.addActionListener(this);
+		contentPanel.add(btnVolver);
+		
 	}
 	
 		
@@ -133,9 +141,18 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 			if(e.getSource().equals(btnRegistrar)) {
 				registroUsuario();
 			}
+			if(e.getSource().equals(btnVolver)) {
+				volver();
+			}
 		}
 
-
+		private void volver() {
+			// TODO Auto-generated method stub
+			this.dispose();
+			InicioSesionRegistro ini = new InicioSesionRegistro(dao);
+			ini.setVisible(true);
+			
+		}
 		private void registroUsuario() {
 			// TODO Auto-generated method stub
 			Usuarios usu;

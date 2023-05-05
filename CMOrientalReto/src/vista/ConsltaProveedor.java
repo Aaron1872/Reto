@@ -56,6 +56,7 @@ public class ConsltaProveedor extends JDialog implements ActionListener{
 		
 		btnConsultas = new JButton("Consulta");
 		btnConsultas.setBounds(396, 35, 87, 29);
+		btnConsultas.addActionListener(this);
 		contentPanel.add(btnConsultas);
 		
 		comboProveedor = new JComboBox();
@@ -76,7 +77,7 @@ public class ConsltaProveedor extends JDialog implements ActionListener{
 			if (comboProveedor.getSelectedIndex() > -1) {
 				consultar();
 			} 
-			//consultar();
+		
 		}
 		if(e.getSource().equals(btnVolver)) {
 			volver(); 
@@ -91,35 +92,35 @@ public class ConsltaProveedor extends JDialog implements ActionListener{
 		//comboProveedor.removeAllItems();
 
 		for (int i = 0; i < pro.size(); i++) {
-			System.out.println(pro.get(i).getNombre());
-			comboProveedor.addItem(pro.get(i).getNombre());
+			comboProveedor.addItem(pro.get(i).getNif()+" | "+pro.get(i).getNombre());
+			
 		}
 		comboProveedor.setSelectedIndex(-1);
 	}
 	
 
-	private void consultarProveedor() {
-		Dao dao = new DaoImplementacion();
-		Proveedor pro =null;
-		String nombre =(String) comboProveedor.getSelectedItem() ;
-		ArrayList<Proveedor> prov = dao.getProveedor();
-		for (Proveedor proveedor : prov) {
-			if(nombre.equalsIgnoreCase(proveedor.getNombre())){
-				pro=proveedor;
-			}
-		}
-		AltaProveedor altpro = new AltaProveedor(dao);
-		altpro.setVisible(true);
-		
-	}
+
 	
 	private void consultar() {
+		String cifProveedor ;
+		int donde;
+		boolean consulta =true;
 		// TODO Auto-generated method stub
-		dao = new DaoImplementacion();
-		AltaProveedor alt = new AltaProveedor(dao);
-		
-		alt.CargarPro(null, dao, (String) comboProveedor.getSelectedItem());
-		alt.setVisible(true);
+		if (comboProveedor.getSelectedIndex() != -1) {
+			//Obtener CIF seleccionado
+			cifProveedor = (String) comboProveedor.getSelectedItem();
+			donde = cifProveedor.indexOf(" ");
+	
+			Proveedor pro = dao.consultaProveedor(cifProveedor.substring(0, donde));
+			
+			AltaProveedor alt = new AltaProveedor( true, dao, pro);
+			cerrar();
+			//alt.CargarPro(null, dao, (String) comboProveedor.getSelectedItem());
+			alt.setVisible(true);
+			
+		}else {
+			////
+		}
 	}
 	
 	
