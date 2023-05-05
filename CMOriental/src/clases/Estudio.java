@@ -8,6 +8,7 @@ public class Estudio extends Anime{
 	private String nombre;
 	private LocalDate fechaFun;
 	private String caracteristica;
+	
 	//get & set
 	public String getNombre() {
 		return nombre;

@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import modelo.Dao;
+
 import javax.swing.JButton;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -15,9 +18,10 @@ public class InicioSesionRegistro extends JFrame implements ActionListener{
 	private JPanel contentPane;
 	JButton IniciarS;
 	JButton btnRegistrarte;
-
+	private Dao dao;
 	
-	public InicioSesionRegistro() {
+	public InicioSesionRegistro(Dao dao) {
+		this.dao=dao;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 623, 378);
 		contentPane = new JPanel();
@@ -54,14 +58,20 @@ public class InicioSesionRegistro extends JFrame implements ActionListener{
 
 	private void registrarse() {
 		// TODO Auto-generated method stub
-		RegistrarseUsuario regis = new RegistrarseUsuario(this,true);
+		cerrar();
+		RegistrarseUsuario regis = new RegistrarseUsuario(this,true,dao);
 		regis.setVisible(true);
 		
+	}
+	
+	private void cerrar() {
+		this.dispose();
 	}
 
 	private void inicioSesion() {
 		// TODO Auto-generated method stub
-		IniciarSesion ini = new IniciarSesion(this,true);
+		cerrar();
+		IniciarSesion ini = new IniciarSesion(this,true,dao);
 		ini.setVisible(true);
 	}
 }
