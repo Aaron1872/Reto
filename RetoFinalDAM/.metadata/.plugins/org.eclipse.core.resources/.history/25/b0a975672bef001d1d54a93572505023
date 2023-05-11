@@ -1,0 +1,116 @@
+package vista;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import clases.Anime;
+import clases.ContenidoMultimedia;
+import modelo.Dao;
+
+import javax.swing.JLabel;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.JTextPane;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+
+public class ConsltaAnime extends JDialog implements ActionListener {
+
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
+	private JLabel lblAnime;
+	private JButton btnConsulta;
+	private JComboBox comboAnime;
+	private JButton btnVolver;
+	private Dao dao;
+
+	/**
+	 * Create the dialog.
+	 */
+	public ConsltaAnime(Admin ven, Dao dao) {
+		this.dao = dao;
+		setBounds(100, 100, 509, 156);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(null);
+		{
+			lblAnime = new JLabel("ANIME");
+			lblAnime.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+			lblAnime.setBounds(10, 11, 79, 29);
+			contentPanel.add(lblAnime);
+		}
+
+		btnConsulta = new JButton("Consulta");
+		btnConsulta.setBounds(396, 35, 87, 29);
+		btnConsulta.addActionListener(this);
+		contentPanel.add(btnConsulta);
+
+		comboAnime = new JComboBox();
+		comboAnime.setBounds(10, 64, 355, 43);
+		comboAnime.addActionListener(this);
+		contentPanel.add(comboAnime);
+
+		btnVolver = new JButton("Volver");
+		btnVolver.setBounds(396, 78, 87, 29);
+		btnVolver.addActionListener(this);
+		contentPanel.add(btnVolver);
+
+		cargarComboAnime();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource().equals(btnConsulta)) {
+			consultar();
+		}
+		if (e.getSource().equals(btnVolver)) {
+			volver();
+		}
+
+	}
+
+	private void volver() {
+		this.dispose();
+	}
+
+	private void cargarComboAnime() {
+
+		ArrayList<ContenidoMultimedia> man = dao.getCM();
+
+		for (int i = 0; i < man.size(); i++) {
+			comboAnime.addItem(man.get(i).getCodigo() + " | " + man.get(i).getTitulo());
+		}
+		comboAnime.setSelectedIndex(-1);
+	}
+
+	private void consultar() {
+	// TODO Auto-generated method stub
+	String cod ;
+	int donde;
+	if(comboAnime.getSelectedIndex() != -1) {
+	cod =(String) comboAnime.getSelectedItem();
+	donde = cod.indexOf(" ");
+
+	ContenidoMultimedia com = dao.consultaCM(cod.substring(0,donde));
+	Anime ani = dao.consultaAnime(cod.substring(0,donde));
+
+	AltaAnime  altm = new AltaAnime(true, dao, ani, com);
+	volver();
+	altm.setVisible(true);
+
+	}
+	}
+}
