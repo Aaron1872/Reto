@@ -1,0 +1,596 @@
+package modelo;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+
+import com.mysql.cj.protocol.Resultset;
+
+import clases.Actor;
+import clases.Anime;
+import clases.Autor;
+import clases.Estudio;
+
+import clases.Proveedor;
+import clases.Usuarios;
+import vista.AltaProveedor;
+import vista.Usuario;
+
+public class DaoImplementacion implements Dao {
+	private Connection con;
+	private PreparedStatement stmt;
+	private ResultSet rs;
+
+	private final String ALTAU = "INSERT INTO Usuario(Codigo_Usuario, Email, Nombre, Apellido, Contraseña) values (?,?,?,?,?)";
+	private final String CONSULTA_USUARIO = "SELECT * FROM Usuario where Nombre = ? and Contraseña = ?";
+	private final String CONSULTA_Admin = "SELECT Nombre,Contraseña FROM Usuario where Codigo_Usuario = 1";
+
+	private final String ALTAA = "INSERT INTO Actor(DNI, Nombre, Fecha_nac, Lugar_nac) values  (?,?,?,?)";
+	private final String SELECT_ACTORES = "SELECT * FROM Actor";
+	private final String SELECT_ACTOR = "SELECT * FROM Actor where DNI=?";
+	private final String MOD_ACTOR = "update Actor set Nombre=?,Fecha_nac=?,Lugar_nac=? where DNI=?";
+	private final String DELETEACTOR = "delete from Actor  where DNI=?";
+
+	private final String ALTAE = "INSERT INTO Estudio(Nombre, Fecha_fun, AnimacionCaracteristica) values (?,?,?) ";
+	private final String SELECT_Estudios = "SELECT * FROM Estudio";
+	private final String SELECT_Estudio = "SELECT * FROM Estudio where nombre=?";
+	private final String UPDATEEST = "update Estudio set Fecha_fun = ?, AnimacionCaracteristica = ? where Nombre = ?";
+	private final String DELETEEST = "delete from Estudio where Nombre=?";
+
+	private final String SELECT_PROVEEDORES = "SELECT * FROM Proveedor";
+	private final String SELECT_PROVEEDOR = "SELECT * FROM Proveedor where NIF=?";
+	private final String ALTAPRO = "INSERT INTO Proveedor(NIF,Nombre,Ubicacion) values  (?,?,?)";
+	private final String DELETEPRO = "delete from Proveedor  where NIF=?";
+	private final String UPDATEPRO = "update Proveedor set NIF=?,Nombre=?,Ubicacion=? where NIF=?";
+	
+	private final String ALTACM = "INSERT INTO ContenidoMultimedia (Codigo, Titulo, Año_ini, Estado, Puntuacion, Codigo_Autor) values (?,?,?,?,?,?)";
+
+	private void openConnection() {
+
+		try {
+			con = DriverManager.getConnection(
+					"jdbc:mysql://127.0.0.1:3306/contenidomultimedia?serverTimezone=Europe/Madrid&useSSL=false", "root",
+					"abcd*1234");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void closeConnection() throws SQLException {
+		try {
+			if (stmt != null)
+				stmt.close();
+			if (con != null)
+				con.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void altaUsuario(Usuarios usu) {
+
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(ALTAU);
+			stmt.setInt(1, usu.getCodigoUS());
+			stmt.setString(2, usu.getEmail());
+			stmt.setString(3, usu.getNombre());
+			stmt.setString(4, usu.getApellido());
+			stmt.setString(5, usu.getContraseña());
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+																									// Actor
+
+	@Override
+	public void altaActor(Actor act) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(ALTAA);
+			stmt.setString(1, act.getDni());
+			stmt.setString(2, act.getNombre());
+			stmt.setDate(3, Date.valueOf(act.getFechaNac()));
+			stmt.setString(4, act.getCiudadNac());
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ArrayList<Actor> getActor() {
+		// TODO Auto-generated method stub
+		this.openConnection();
+		Actor act;
+		ResultSet rs;
+		ArrayList<Actor> actores = new ArrayList<>();
+		try {
+
+			stmt = con.prepareStatement(SELECT_ACTORES);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+
+				act = new Actor();
+				act.setDni(rs.getString("DNI"));
+				act.setNombre(rs.getString("Nombre"));
+				act.setFechaNac(Date.valueOf(rs.getString("Fecha_nac")).toLocalDate());
+				act.setCiudadNac(rs.getString("Lugar_nac"));
+
+				actores.add(act);
+
+			}
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			this.closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return actores;
+
+	}
+
+	@Override
+	public Actor consultaActor(String dni) {
+		// TODO Auto-generated method stub
+		Actor act = null;
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(SELECT_ACTOR);
+
+			stmt.setString(1, dni);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				act = new Actor();
+				act.setDni(rs.getString("DNI"));
+				act.setNombre(rs.getString("Nombre"));
+				act.setFechaNac(Date.valueOf(rs.getString("Fecha_nac")).toLocalDate());
+				act.setCiudadNac(rs.getString("Lugar_nac"));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return act;
+	}
+
+	@Override
+	public void modiActor(String dni, Actor actt) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(MOD_ACTOR);
+
+			stmt.setString(1, actt.getNombre());
+			stmt.setDate(2, Date.valueOf(actt.getFechaNac()));
+			stmt.setString(3, actt.getCiudadNac());
+			stmt.setString(4, dni);
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void bajaActor(String dni) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(DELETEACTOR);
+
+			stmt.setString(1, dni);
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+																						// Estudio
+	
+	
+	@Override
+	public void altaEstudios(Estudio est){
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(ALTAE);
+			stmt.setString(1, est.getNombre());
+			stmt.setDate(2, Date.valueOf(est.getFechaFun()));
+			stmt.setString(3, est.getCaracteristica());
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+ 	@Override
+	public void altaAnime(Anime ani){
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(ALTACM);
+			stmt.setString(1, ani.getCodigo());
+			stmt.setString(2, ani.getTitulo());
+			stmt.setString(3, ani.getAutor());
+			stmt.setString(4, ani.getTipoAnime());
+			stmt.setDate(4, Date.valueOf(ani.getAñoInicio()));
+			stmt.setFloat(5, ani.getPuntuacion());
+			stmt.setInt(6, ani.getCapitulos());
+			stmt.setInt(7, ani.getTemporadas());
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void modificarEstudio(Estudio est, String nombre) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(UPDATEEST);
+
+			stmt.setDate(1, Date.valueOf(est.getFechaFun()));
+			stmt.setString(2, est.getCaracteristica());
+			stmt.setString(3, nombre);
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void borradoEstudio(String nombre) {
+		// TODO Auto-generated method stub
+		Estudio est = null;
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(DELETEEST);
+
+			stmt.setString(1, nombre);
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public Estudio consultaEstudio(String nombre) {
+		// TODO Auto-generated method stub
+
+		Estudio est = null;
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(SELECT_Estudio);
+
+			stmt.setString(1, nombre);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				est = new Estudio();
+				est.setNombre(rs.getString("Nombre"));
+				est.setFechaFun(Date.valueOf(rs.getString("Fecha_fun")).toLocalDate());
+				est.setCaracteristica(rs.getString("AnimacionCaracteristica"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return est;
+	}
+
+	@Override
+	public ArrayList<Estudio> getEstudio() {
+		// TODO Auto-generated method stub
+		this.openConnection();
+		Estudio estu;
+		ResultSet rs;
+		ArrayList<Estudio> est = new ArrayList<>();
+		try {
+			stmt = con.prepareStatement(SELECT_Estudios);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				estu = new Estudio();
+				estu.setNombre(rs.getString("Nombre"));
+				estu.setFechaFun(Date.valueOf(rs.getString("Fecha_fun")).toLocalDate());
+				estu.setCaracteristica(rs.getString("AnimacionCaracteristica"));
+
+				est.add(estu);
+
+			}
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			this.closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return est;
+	}
+
+	
+
+	@Override
+	public void altaAutor(Autor au) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void altaManga(Usuarios mangas) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean consultaUsuario(String nombre, String contraseña) {
+		boolean esta = false;
+		this.openConnection();
+		try {
+
+			stmt = con.prepareStatement(CONSULTA_USUARIO);
+
+			stmt.setString(1, nombre);
+			stmt.setString(2, contraseña);
+
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				esta = true;
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+
+		return esta;
+
+	}
+
+																							// Proveedores
+	@Override
+	public void altaProveedoro(Proveedor pro) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+
+			stmt = con.prepareStatement(ALTAPRO);
+			stmt.setString(1, pro.getNif());
+			stmt.setString(2, pro.getNombre());
+			stmt.setString(3, pro.getUbicacion());
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			closeConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public ArrayList<Proveedor> getProveedor() {
+		// TODO Auto-generated method stub
+		this.openConnection();
+		Proveedor prove;
+		ResultSet rs;
+		ArrayList<Proveedor> pro = new ArrayList<>();
+		try {
+			stmt = con.prepareStatement(SELECT_PROVEEDORES);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				prove = new Proveedor();
+				prove.setNif(rs.getString("NIF"));
+				prove.setNombre(rs.getString("Nombre"));
+				prove.setUbicacion(rs.getString("Ubicacion"));
+
+				pro.add(prove);
+
+			}
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			this.closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return pro;
+	}
+
+	@Override
+	public Proveedor consultaProveedor(String cifProveedor) {
+		// TODO Auto-generated method stub
+
+		Proveedor pro = null;
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(SELECT_PROVEEDOR);
+
+			stmt.setString(1, cifProveedor);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				pro = new Proveedor();
+				pro.setNif(rs.getString("NIF"));
+				pro.setNombre(rs.getString("Nombre"));
+				pro.setUbicacion(rs.getString("Ubicacion"));
+
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return pro;
+	}
+
+	@Override
+	public void borradoProveedor(String nif) {
+		// TODO Auto-generated method stub
+		Proveedor pro = null;
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(DELETEPRO);
+
+			stmt.setString(1, nif);
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void modificarProveedor(String modnif, Proveedor pro) {
+		// TODO Auto-generated method stub
+		this.openConnection();
+
+		try {
+			stmt = con.prepareStatement(UPDATEPRO);
+
+			stmt.setString(1, pro.getNif());
+			stmt.setString(2, pro.getNombre());
+			stmt.setString(3, pro.getUbicacion());
+			stmt.setString(4, modnif);
+
+			stmt.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void modificarAnime(Anime anim, String codigo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void borradoAnime(String codigo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
