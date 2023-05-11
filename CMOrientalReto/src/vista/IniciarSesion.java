@@ -28,7 +28,7 @@ public class IniciarSesion extends JDialog implements ActionListener{
 	private JPasswordField textContraseña;
 	private JButton btnLogin;
 	private Dao dao;
-
+	private JButton btnVolver ;
 	/**
 	 * Launch the application.
 	 */
@@ -76,10 +76,42 @@ public class IniciarSesion extends JDialog implements ActionListener{
 		textContraseña = new JPasswordField();
 		textContraseña.setBounds(183, 161, 210, 29);
 		contentPanel.add(textContraseña);
+		
+		btnVolver = new JButton("volver");
+		btnVolver.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnVolver.setBounds(41, 227, 89, 26);
+		btnVolver.addActionListener(this);
+		contentPanel.add(btnVolver);
 	}
-
+	
+	
+	
+	
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource().equals(btnLogin)) {
+			iniciarSesion();
+		}
+		if(e.getSource().equals(btnVolver)) {
+			volver();
+		}
+
+	}
+	
+	
+	private void volver() {
+		// TODO Auto-generated method stub
+		this.dispose();
+		InicioSesionRegistro ini = new InicioSesionRegistro(dao);
+		ini.setVisible(true);
+		
+	}
+
+
+	public void iniciarSesion() {
 		char[] clave = textContraseña.getPassword();
 		String claveFinal = new String(clave);
 		Usuarios usu = null;
@@ -96,7 +128,7 @@ public class IniciarSesion extends JDialog implements ActionListener{
 		}else if(dao.consultaUsuario(nombre, contraseña)) {
 			dispose();
 			JOptionPane.showMessageDialog(null, "Bienvenido al Sistema","Ingresaste como usuario",JOptionPane.INFORMATION_MESSAGE);
-			Usuario u = new Usuario();
+			Usuario u = new Usuario(dao);
 			u.setVisible(true);
 		}else {
 			JOptionPane.showMessageDialog(null, "Usuario o Contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
@@ -104,10 +136,5 @@ public class IniciarSesion extends JDialog implements ActionListener{
 			textContraseña.setText("");
 			textNomUsuario.requestFocus();
 		} 
-
-
-
 	}
-
-
 }
