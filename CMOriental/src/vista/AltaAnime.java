@@ -1,186 +1,478 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import clases.Actor;
+import clases.Anime;
+import clases.Autor;
+import clases.ContenidoMultimedia;
+import clases.Estudio;
+import modelo.Dao;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 
-public class AltaAnime extends JDialog {
+public class AltaAnime extends JDialog implements ActionListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textCodigo;
 	private JTextField textTitulo;
 	private JTextField textAño;
 	private JTextField textPuntuacion;
-	private JTextField textTipo;
 	private JTextField textCapitulos;
 	private JTextField textTemporadas;
-	private JTable tableActores;
+	private JComboBox comboEstudio;
+	private JButton btnVolver;
+	private JButton btnBaja;
+	private JButton btnModi;
+	private JButton btnAlta;
+	private JComboBox comboAutor;
+	private JComboBox comboEstado;
+	private Dao dao;
+	private Anime anim;
+	private Autor aut;
+	private JTextField textTipo;
+	private JTable tabla;
+	private AltaActor ven;
+	private ArrayList<Actor> actores ;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			AltaAnime dialog = new AltaAnime();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
+	 * 
+	 * @param com
 	 */
-	public AltaAnime() {
+	public AltaAnime(boolean modal, Dao dao, Anime ani, ContenidoMultimedia com, Autor aut) {
+		this.setModal(modal);
+		anim = ani;
+		this.dao = dao;
+		this.actores = dao.getActor();
 		getContentPane().setLayout(null);
-		
+		getContentPane().setLayout(null);
+		contentPanel.setBounds(0, 656, 502, -656);
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel);
+
 		JLabel lblAnime = new JLabel("ANIME");
 		lblAnime.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		lblAnime.setBounds(10, 11, 86, 23);
 		getContentPane().add(lblAnime);
 		setBounds(100, 100, 518, 692);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		
+
 		JLabel lblAnime_1 = new JLabel("Codigo");
-		lblAnime_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		lblAnime_1.setBounds(10, 67, 86, 23);
-		contentPanel.add(lblAnime_1);
-		
+		lblAnime_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+		getContentPane().add(lblAnime_1);
+
 		JLabel lblAnime_2 = new JLabel("Titulo");
-		lblAnime_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		lblAnime_2.setBounds(10, 115, 86, 23);
-		contentPanel.add(lblAnime_2);
-		
+		lblAnime_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+		getContentPane().add(lblAnime_2);
+
 		JLabel lblAnime_3 = new JLabel("Autor");
+		lblAnime_3.setBounds(10, 198, 86, 23);
 		lblAnime_3.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblAnime_3.setBounds(10, 165, 86, 23);
-		contentPanel.add(lblAnime_3);
-		
+		getContentPane().add(lblAnime_3);
+
 		JLabel lblAnime_4 = new JLabel("A\u00F1o Inicio");
+		lblAnime_4.setBounds(10, 247, 86, 23);
 		lblAnime_4.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblAnime_4.setBounds(10, 214, 86, 23);
-		contentPanel.add(lblAnime_4);
-		
+		getContentPane().add(lblAnime_4);
+
 		JLabel lblAnime_4_1 = new JLabel("Estado");
+		lblAnime_4_1.setBounds(10, 285, 86, 23);
 		lblAnime_4_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblAnime_4_1.setBounds(10, 257, 86, 23);
-		contentPanel.add(lblAnime_4_1);
-		
+		getContentPane().add(lblAnime_4_1);
+
 		JLabel lblPuntuacion = new JLabel("Puntuacion");
+		lblPuntuacion.setBounds(10, 319, 86, 23);
 		lblPuntuacion.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblPuntuacion.setBounds(10, 301, 86, 23);
-		contentPanel.add(lblPuntuacion);
-		
-		JLabel lblTipo = new JLabel("Tipo");
-		lblTipo.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblTipo.setBounds(10, 335, 86, 23);
-		contentPanel.add(lblTipo);
-		
+		getContentPane().add(lblPuntuacion);
+
 		JLabel lblCapitulos = new JLabel("Capitulos");
+		lblCapitulos.setBounds(10, 353, 86, 23);
 		lblCapitulos.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblCapitulos.setBounds(10, 369, 86, 23);
-		contentPanel.add(lblCapitulos);
-		
+		getContentPane().add(lblCapitulos);
+
 		JLabel lblTemporadas = new JLabel("Temporadas");
+		lblTemporadas.setBounds(12, 387, 101, 23);
 		lblTemporadas.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblTemporadas.setBounds(10, 405, 101, 23);
-		contentPanel.add(lblTemporadas);
-		
+		getContentPane().add(lblTemporadas);
+
 		JLabel lblEstudio = new JLabel("Estudio");
+		lblEstudio.setBounds(10, 443, 86, 23);
 		lblEstudio.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblEstudio.setBounds(10, 439, 86, 23);
-		contentPanel.add(lblEstudio);
-		
+		getContentPane().add(lblEstudio);
+
 		JLabel lblActores = new JLabel("Actores");
+		lblActores.setBounds(10, 489, 86, 23);
 		lblActores.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblActores.setBounds(10, 486, 86, 23);
-		contentPanel.add(lblActores);
-		
+		getContentPane().add(lblActores);
+
 		textCodigo = new JTextField();
 		textCodigo.setBounds(123, 71, 279, 20);
-		contentPanel.add(textCodigo);
+		getContentPane().add(textCodigo);
 		textCodigo.setColumns(10);
-		
+		textCodigo.setToolTipText("Codigo de 4 numeros");
+
 		textTitulo = new JTextField();
-		textTitulo.setColumns(10);
 		textTitulo.setBounds(123, 119, 279, 20);
-		contentPanel.add(textTitulo);
-		
+		textTitulo.setColumns(10);
+		getContentPane().add(textTitulo);
+
 		textAño = new JTextField();
+		textAño.setBounds(123, 251, 279, 20);
 		textAño.setColumns(10);
-		textAño.setBounds(123, 218, 279, 20);
-		contentPanel.add(textAño);
-		
+		textAño.setToolTipText("Año de inicio");
+		getContentPane().add(textAño);
+
 		textPuntuacion = new JTextField();
+		textPuntuacion.setBounds(123, 329, 279, 20);
 		textPuntuacion.setColumns(10);
-		textPuntuacion.setBounds(123, 304, 279, 20);
-		contentPanel.add(textPuntuacion);
-		
-		textTipo = new JTextField();
-		textTipo.setColumns(10);
-		textTipo.setBounds(123, 339, 279, 20);
-		contentPanel.add(textTipo);
-		
+		getContentPane().add(textPuntuacion);
+		textPuntuacion.setToolTipText("Puntua entre 0-10");
+
 		textCapitulos = new JTextField();
+		textCapitulos.setBounds(123, 360, 279, 20);
 		textCapitulos.setColumns(10);
-		textCapitulos.setBounds(123, 373, 279, 20);
-		contentPanel.add(textCapitulos);
-		
+		getContentPane().add(textCapitulos);
+		textCapitulos.setToolTipText("Numero de capitulos");
+
 		textTemporadas = new JTextField();
+		textTemporadas.setBounds(123, 391, 279, 20);
 		textTemporadas.setColumns(10);
-		textTemporadas.setBounds(121, 409, 279, 20);
-		contentPanel.add(textTemporadas);
-		
-		JComboBox comboEstado = new JComboBox();
-		comboEstado.setBounds(123, 260, 279, 22);
-		contentPanel.add(comboEstado);
-		
-		JComboBox comboAutor = new JComboBox();
-		comboAutor.setBounds(123, 168, 279, 22);
-		contentPanel.add(comboAutor);
-		
-		JButton btnAlta = new JButton("Alta");
-		btnAlta.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		getContentPane().add(textTemporadas);
+		textTemporadas.setToolTipText("Numero de terporadas");
+
+		comboEstado = new JComboBox();
+		comboEstado.setBounds(123, 296, 279, 22);
+		comboEstado.setModel(new DefaultComboBoxModel(new String[] { "Proximamente", "En emision", "Finalizado" }));
+		comboEstado.setSelectedIndex(-1);
+		getContentPane().add(comboEstado);
+
+		comboAutor = new JComboBox();
+		comboAutor.setBounds(123, 201, 279, 22);
+		getContentPane().add(comboAutor);
+
+		btnAlta = new JButton("Alta");
 		btnAlta.setBounds(412, 462, 80, 20);
-		contentPanel.add(btnAlta);
-		
-		JButton btnModi = new JButton("Modi");
+		btnAlta.addActionListener(this);
+		getContentPane().add(btnAlta);
+
+		btnModi = new JButton("Modi");
 		btnModi.setBounds(412, 489, 80, 20);
-		contentPanel.add(btnModi);
-		
-		JButton btnBaja = new JButton("Baja");
+		btnModi.addActionListener(this);
+		btnModi.addActionListener(this);
+		getContentPane().add(btnModi);
+
+		btnBaja = new JButton("Baja");
 		btnBaja.setBounds(412, 520, 80, 20);
-		contentPanel.add(btnBaja);
-		
-		JButton btnVolver = new JButton("Volver");
+		btnBaja.addActionListener(this);
+		btnBaja.addActionListener(this);
+		getContentPane().add(btnBaja);
+
+		btnVolver = new JButton("Volver");
 		btnVolver.setBounds(412, 551, 80, 20);
-		contentPanel.add(btnVolver);
+		btnVolver.addActionListener(this);
+		btnVolver.addActionListener(this);
+		getContentPane().add(btnVolver);
+
+		comboEstudio = new JComboBox();
+		comboEstudio.setBounds(123, 446, 279, 22);
+		getContentPane().add(comboEstudio);
+
+		JLabel lblAnime_1_1 = new JLabel("Tipo");
+		lblAnime_1_1.setBounds(10, 164, 86, 23);
+		lblAnime_1_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+		getContentPane().add(lblAnime_1_1);
+
+		textTipo = new JTextField();
+		textTipo.setBounds(123, 168, 279, 20);
+		textTipo.setColumns(10);
+		getContentPane().add(textTipo);
+
+		cargarComboAutor(dao);
+		cargarComboEstudio(dao);
+
+		if (ani == null) {
+			btnBaja.setEnabled(false);
+			btnModi.setEnabled(false);
+
+		} else {
+			btnAlta.setEnabled(false);
+			textCodigo.setEnabled(false);
+			CargarAnime(ani, com, aut);
+		}
+
+		presentarTabla();
+
+	}
+
+	public void presentarTabla() {
+		JScrollPane scroll = new JScrollPane();
+		scroll.setBorder(null);
+		scroll.getViewport().setBackground(Color.WHITE);
+		scroll.setEnabled(false);
+		scroll.setBorder(BorderFactory.createEmptyBorder());
+		tabla = this.cargarTabla(actores);
+
+		tabla.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				visualizarActor(this, ven);
+				
+			}
+
+			
+		});
+
+		tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tabla.setBorder(null);
+		tabla.setBackground(Color.WHITE);
+		tabla.setForeground(Color.BLACK);
+		tabla.setFont(new Font("Arial", Font.PLAIN, 14));
+		tabla.setRowHeight(40);
+		// tabla.setEnabled(false);
+		scroll.setViewportView(tabla);
+		scroll.setBounds(31, 524, 374, 118);
+		getContentPane().add(scroll);
+
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 16));
+		lblNewLabel_1.setBounds(0, 0, 502, 653);
+		getContentPane().add(lblNewLabel_1);
+	}
+
+	public JTable cargarTabla(List<Actor> actores) {
+		String[] cabeceras = { "DNI", "NOMBRE", "FECHA NAC", "CIUDAD NAC" };
+		String[] fila = new String[10];
+
+		DefaultTableModel model = new DefaultTableModel(null, cabeceras);
+
+		for (Actor a : actores) {
+			fila[0] = a.getDni() + "";
+			fila[1] = a.getNombre() + "";
+			fila[2] = a.getFechaNac() + "";
+			fila[3] = a.getCiudadNac() + "";
+
+			model.addRow(fila);
+		}
 		
-		tableActores = new JTable();
-		tableActores.setBounds(123, 493, 279, 123);
-		contentPanel.add(tableActores);
+
+		return new JTable(model);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if (e.getSource().equals(btnAlta)) {
+			altaAnime();
+		}
+		if (e.getSource().equals(btnModi)) {
+			modificado(anim);
+		}
+		if (e.getSource().equals(btnBaja)) {
+			borrado(anim);
+		}
+		if (e.getSource().equals(btnVolver)) {
+			volver();
+		}
+
+	}
+
+	private void modificado(Anime ani) {
+		String dni;
+		int donde;
 		
-		JComboBox comboEstudio = new JComboBox();
-		comboEstudio.setBounds(123, 442, 279, 22);
-		contentPanel.add(comboEstudio);
+		dni = (String) comboAutor.getSelectedItem();
+		donde = dni.indexOf(" ");
+		String anime = dni.substring(0, donde);
 		
+		int codigo = ((ContenidoMultimedia) ani).getCodigo();
+		if (validar()) {
+			
+			Anime anim = new Anime();
+			anim.setCodigo(Integer.parseInt(textCodigo.getText()));
+			anim.setTitulo(textTitulo.getText());
+			anim.setTipoAnime(textTipo.getText());
+			anim.setAutor((String) comboAutor.getSelectedItem());
+			anim.setAñoInicio(Integer.parseInt(textAño.getText()));
+			anim.setPuntuacion(Float.parseFloat(textPuntuacion.getText()));
+			anim.setCapitulos(Integer.parseInt(textCapitulos.getText()));
+			anim.setTemporadas(Integer.parseInt(textTemporadas.getText()));
+			anim.setEstudio((String) comboEstudio.getSelectedItem());
+			anim.setEstado((String) comboEstado.getSelectedItem());
+			anim.setAutor(anime);
+
+			dao.modificarAnime(anim, codigo);
+			limpiar();
+			
+			JOptionPane.showMessageDialog(null, "Anime modificado correctamente", "Modificado", JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			JOptionPane.showMessageDialog(null, "Error en algun parametro al modificar", "Error",JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+
+	public void visualizarActor(MouseAdapter mouseAdapter, AltaActor ven) {
+
+		int row = tabla.getSelectedRow();
+		Actor act;
+
+		// if (row != -1) {
+		String dni = (String) tabla.getValueAt(row, 0);
+
+		act = dao.consultaActor(dni);
+		
+		AltaActor vent = new AltaActor(true, dao, act);
+		vent.setVisible(true);
+		
+		// }
+
+	}
+	
+	
+
+	private void borrado(Anime ani) {
+		// TODO Auto-generated method stub
+		int codigo = ani.getCodigo();
+
+		dao.borradoAnime(codigo);
+		limpiar();
+		JOptionPane.showMessageDialog(null, "Anime borrado correctamente", "Borrado", JOptionPane.INFORMATION_MESSAGE);
+		volver();
+	}
+
+	public boolean validar() {
+		boolean bien = false;
+		if (textCodigo.getText().equalsIgnoreCase(null) && textAño.getText().equalsIgnoreCase(null)
+				&& textCapitulos.getText().equalsIgnoreCase(null) && textPuntuacion.getText().equalsIgnoreCase(null)
+				&& textTemporadas.getText().equalsIgnoreCase(null) && textTitulo.getText().equalsIgnoreCase(null)) {
+
+		}else {
+			if(Float.parseFloat(textPuntuacion.getText()) > 0 && Float.parseFloat(textPuntuacion.getText()) <= 10) {
+				bien=true;
+			}
+		}
+		
+		
+		return bien;
+
+	}
+
+	private void altaAnime() {
+		int donde;
+		String dni = (String) comboAutor.getSelectedItem();
+		donde = dni.indexOf(" ");
+		String anime = dni.substring(0, donde);
+	
+
+		if (validar()) {
+
+			Anime ani = new Anime();
+
+			ani.setCodigo(Integer.parseInt(textCodigo.getText()));
+			ani.setTitulo(textTitulo.getText());
+			ani.setTipoAnime(textTipo.getText());
+			ani.setEstado((String) comboEstado.getSelectedItem());
+			ani.setAutor((String) comboAutor.getSelectedItem());
+			ani.setAñoInicio(Integer.parseInt(textAño.getText()));
+			ani.setPuntuacion(Float.parseFloat(textPuntuacion.getText()));
+			ani.setCapitulos(Integer.parseInt(textCapitulos.getText()));
+			ani.setTemporadas(Integer.parseInt(textTemporadas.getText()));
+			ani.setEstudio((String) comboEstudio.getSelectedItem());
+			ani.setAutor(anime);
+			ani.setEstudio((String) comboEstudio.getSelectedItem());
+
+			dao.altaAnime(ani,actores);
+			
+			JOptionPane.showMessageDialog(null, "Alta hecha correctamente", "Alta", JOptionPane.INFORMATION_MESSAGE);
+			limpiar();
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "Error en algun parametro", "Error",JOptionPane.ERROR_MESSAGE);
+		}
+
+	}
+
+	private void limpiar() {
+		// TODO Auto-generated method stub
+		textCodigo.setText(null);
+		textCapitulos.setText(null);
+		comboAutor.setSelectedIndex(-1);
+		comboEstado.setSelectedIndex(-1);
+		comboEstudio.setSelectedIndex(-1);
+		;
+		textTipo.setText(null);
+		textAño.setText(null);
+		textPuntuacion.setText(null);
+		textTemporadas.setText(null);
+		textTitulo.setText(null);
+	}
+
+	private void volver() {
+		this.dispose();
+	}
+
+	private void cargarComboAutor(Dao dao) {
+		ArrayList<Autor> aut = dao.getAutor();
+		for (int i = 0; i < aut.size(); i++) {
+			comboAutor.addItem(aut.get(i).getDni() + " | " + aut.get(i).getNombre());
+		}
+		comboAutor.setSelectedIndex(-1);
+
+	}
+
+	private void cargarComboEstudio(Dao dao) {
+		ArrayList<Estudio> est = dao.getEstudio();
+		for (int i = 0; i < est.size(); i++) {
+			comboEstudio.addItem(est.get(i).getNombre());
+		}
+		comboEstudio.setSelectedIndex(-1);
+
+	}
+
+	public void CargarAnime(Anime ani, ContenidoMultimedia cm, Autor aut) {
+		textCodigo.setText(Integer.toString(ani.getCodigo()));
+		textTitulo.setText(cm.getTitulo());
+		textTipo.setText(ani.getTipoAnime());
+		comboAutor.setSelectedItem(aut.getDni() + " | " + aut.getNombre());
+		textAño.setText(Integer.toString(cm.getAñoInicio()));
+		comboEstado.setSelectedItem(cm.getEstado());
+		textPuntuacion.setText(Float.toString(cm.getPuntuacion()));
+		textCapitulos.setText(Integer.toString(ani.getCapitulos()));
+		textTemporadas.setText(Integer.toString(ani.getTemporadas()));
+		comboEstudio.setSelectedItem(ani.getEstudio());
 	}
 }

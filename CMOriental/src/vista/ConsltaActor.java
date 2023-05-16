@@ -75,7 +75,7 @@ public class ConsltaActor extends JDialog implements ActionListener{
 			consultar();
 		}
 		if(e.getSource().equals(btnVolver)) {
-			volver(dao); 
+			volver(); 
 		}
 	}
 	
@@ -99,16 +99,14 @@ public class ConsltaActor extends JDialog implements ActionListener{
 			
 			Actor act = dao.consultaActor(dniA.substring(0,donde));
 			AltaActor alt = new AltaActor(consulta, dao, act);
-			cerrar();
+			volver();
 			alt.setVisible(true);
 		}
 	}
 	
-	private void cerrar() {
+	private void volver() {
 		this.dispose();
 	}
 
-	private void volver(Dao dao) {
-		cerrar();
-	}
+	
 }

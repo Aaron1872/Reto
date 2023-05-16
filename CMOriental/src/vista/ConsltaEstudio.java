@@ -83,7 +83,7 @@ public class ConsltaEstudio extends JDialog implements ActionListener {
 	}
 
 	private void consultar(Dao dao) {
-// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 		String nombre;
 		boolean consulta = true;
 

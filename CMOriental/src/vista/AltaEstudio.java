@@ -165,24 +165,29 @@ public class AltaEstudio extends JDialog implements ActionListener {
 
 			dao.modificarEstudio(estu, nombre);
 			limpiar();
+			JOptionPane.showMessageDialog(null, "Estudio modificado correctamente", "Modificado",JOptionPane.INFORMATION_MESSAGE);
+			volver();
 
+		}else {
+			JOptionPane.showMessageDialog(null, "error al modificar", "Error",JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 
 	private void borrado(Estudio est) {
-// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 		String nombre = est.getNombre();
-
+		//pasamos el nombre del estudio para borrar ese estudio
 		dao.borradoEstudio(nombre);
 		limpiar();
-		JOptionPane.showMessageDialog(null, "Proveedor borrado correctamente", "Borrado",
-				JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(null, "Estudio borrado correctamente", "Borrado",JOptionPane.INFORMATION_MESSAGE);
 		volver();
 	}
 
+	//Validamos para comprobar que todo lo introducido es correcto
 	public boolean validar() {
 		boolean bien = false;
+		//comprobar que no hay parametros vacios
 		if (textNombre.getText().equalsIgnoreCase(null) && textFecha.getText().equalsIgnoreCase(null)
 				&& textCaracteristicas.getText().equalsIgnoreCase(null)) {
 
@@ -198,22 +203,22 @@ public class AltaEstudio extends JDialog implements ActionListener {
 		if (validar()) {
 
 			Estudio est = new Estudio();
-// pro.setNif(textNif.getText());
+			//Cogemos los datos que ha escrito para pasarselo al dao y hacer el alta
 			est.setNombre(textNombre.getText());
 			DateTimeFormatter formateador = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			est.setFechaFun(LocalDate.parse(textFecha.getText(), formateador));
 			est.setCaracteristica(textCaracteristicas.getText());
 
 			dao.altaEstudios(est);
-			JOptionPane.showMessageDialog(null, "Alta hecha correctamente", "Alta", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Alta de estudio correctamente", "Alta", JOptionPane.INFORMATION_MESSAGE);
 			limpiar();
 		} else {
-			JOptionPane.showMessageDialog(null, "No puedes dejar parametros vacios", "Error",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Alta incorrecto, Error de algun parametro", "Error",JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
 
+	//Pone los textField a blanco
 	private void limpiar() {
 // TODO Auto-generated method stub
 		textNombre.setText(null);
@@ -221,12 +226,13 @@ public class AltaEstudio extends JDialog implements ActionListener {
 		textCaracteristicas.setText(null);
 	}
 
+	//cierra la ventana
 	private void volver() {
 		this.dispose();
 	}
 
 	
-
+	//Si vienes de consulta al abrir carga los datos
 	public void CargarEstudio(Estudio est) {
 		textNombre.setText(est.getNombre());
 		textFecha.setText(est.getFechaFun().toString());
