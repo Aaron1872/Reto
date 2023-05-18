@@ -10,11 +10,15 @@ import javax.swing.border.EmptyBorder;
 
 import modelo.Dao;
 import modelo.DaoImplementacion;
+import clases.Autor;
+import clases.ContenidoMultimedia;
+import clases.Editorial;
 import clases.Manga;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -27,6 +31,7 @@ public class ConsltaManga extends JDialog  implements ActionListener{
 	private JComboBox comboManga ;
 	private JButton btnVolver;
 	private Dao dao;
+
 	/**
 	 * Launch the application.
 	 */
@@ -36,9 +41,9 @@ public class ConsltaManga extends JDialog  implements ActionListener{
 	/**
 	 * Create the dialog.
 	 * @param dao 
-	 * @param b 
+	 * @param admin 
 	 */
-	public ConsltaManga(boolean b, Dao dao) {
+	public ConsltaManga(Admin admin, Dao dao) {
 		this.dao=dao;
 		
 		setBounds(100, 100, 509, 156);
@@ -55,15 +60,19 @@ public class ConsltaManga extends JDialog  implements ActionListener{
 		
 		btnConsultas = new JButton("Consulta");
 		btnConsultas.setBounds(396, 35, 87, 29);
+		btnConsultas.addActionListener(this);
 		contentPanel.add(btnConsultas);
 		
 		comboManga = new JComboBox();
 		comboManga.setBounds(10, 64, 355, 43);
 		contentPanel.add(comboManga);
 		
-		JButton btnVolver = new JButton("Volver");
+		btnVolver = new JButton("Volver");
 		btnVolver.setBounds(396, 78, 87, 29);
+		btnVolver.addActionListener(this);
 		contentPanel.add(btnVolver);
+		
+		cargarComboManga();
 	}
 	
 	@Override
@@ -73,27 +82,53 @@ public class ConsltaManga extends JDialog  implements ActionListener{
 			consultar();
 		}
 		if(e.getSource().equals(btnVolver)) {
-			volver(dao);
+			volver();
 		}
 		
 		
 		
 	}
 	
-	private void cerrar() {
+	private void volver() {
 		this.dispose();
 	}
+	
+	
+	private void cargarComboManga() {
+		
+		ArrayList<ContenidoMultimedia> man = dao.getCM(true);
 
-	private void volver(Dao dao) {
-		cerrar();
-		Admin ad = new Admin(dao);
-		ad.setVisible(true);
+		for (int i = 0; i < man.size(); i++) {
+			comboManga.addItem(man.get(i).getCodigo()+" | "+man.get(i).getTitulo());
+		}
+		comboManga.setSelectedIndex(-1);
 	}
 
+	
 	private void consultar() {
 		// TODO Auto-generated method stub
-		Manga man = new Manga();
-		AltaManga  altm = new AltaManga(true, dao,man);
-		altm.setVisible(true);
+		String cod ;
+		int donde;
+		if(comboManga.getSelectedIndex() != -1) {
+			cod =(String) comboManga.getSelectedItem();
+			donde = cod.indexOf(" ");
+			
+			ContenidoMultimedia com = dao.consultaCM(Integer.parseInt(cod.substring(0,donde)));
+			Manga man = dao.consultaManga(Integer.parseInt(cod.substring(0,donde)));
+			Autor au = dao.consultaAutor(com.getAutor());
+			Editorial ed = dao.consultaEditorial(man.getEditorial());
+			AltaManga  altm = new AltaManga(true, dao, man, com, au, ed);
+			volver();
+			altm.setVisible(true);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 }

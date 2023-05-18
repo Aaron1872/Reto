@@ -24,6 +24,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -76,7 +78,9 @@ public class AltaActor extends JDialog implements ActionListener{
 			JLabel lblNombre = new JLabel("Nombre: ");
 			lblNombre.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
 			lblNombre.setBounds(10, 97, 79, 29);
+	
 			contentPanel.add(lblNombre);
+			
 		}
 		{
 			JLabel lblFecha = new JLabel("Fecha Nacimiento: ");
@@ -94,9 +98,13 @@ public class AltaActor extends JDialog implements ActionListener{
 		textDNI = new JTextField();
 		textDNI.setBounds(68, 63, 319, 20);
 		contentPanel.add(textDNI);
+		textDNI.setToolTipText("Introduce un DNI valido ");
 		textDNI.setColumns(10);
+	
+		
 		
 		textNombre = new JTextField();
+		textNombre.setToolTipText("Nombre");
 		textNombre.setColumns(10);
 		textNombre.setBounds(78, 103, 309, 20);
 		contentPanel.add(textNombre);
@@ -131,6 +139,7 @@ public class AltaActor extends JDialog implements ActionListener{
 		textFecha.setBounds(145, 183, 242, 20);
 		contentPanel.add(textFecha);
 		
+	        
 		if(act==null) {
 			btnBaja.setEnabled(false);
 			btnModi.setEnabled(false);
@@ -162,19 +171,32 @@ public class AltaActor extends JDialog implements ActionListener{
 	}
 	
 	private  boolean validar() {
-		boolean bien=false;
-		if(textDNI.getText().equalsIgnoreCase(null) && textNombre.getText().equalsIgnoreCase(null) && textFecha.getText().equalsIgnoreCase(null) && textLugar.getText().equalsIgnoreCase(null)) {
-			bien = true;
+		boolean bien=true;
+		String letraMayus = "";
+		//Comprobar que no deja nada a blanco
+		if(textDNI.getText().equalsIgnoreCase(null) || textNombre.getText().equalsIgnoreCase(null) || textFecha.getText().equalsIgnoreCase(null) || textLugar.getText().equalsIgnoreCase(null)) {
+			bien = false;
+			
+			
+		}else {
+			//Comprobar que el dni introducido tenga 8 numeros y al final una letra
+			Pattern pat = Pattern.compile("[0-9]{8,9}[A-Z]");
+			Matcher mat = pat.matcher(textDNI.getText());
+			if(!mat.matches()) {
+				bien=false;
+			}
+			
+			
 		}
-		
-		
 		
 		
 		return bien;
 	}
 	
+	
 	private void baja(Actor actt) {
 		// TODO Auto-generated method stub
+		//pasamos el dni del seleccionado en la consulta para hacer la baja de ese actor
 		String dni = actt.getDni();
 		dao.bajaActor(dni);
 		JOptionPane.showMessageDialog(null, "Actor borrado correctamente","Borrado",JOptionPane.INFORMATION_MESSAGE);
@@ -186,6 +208,7 @@ public class AltaActor extends JDialog implements ActionListener{
 		
 		String dni = act.getDni();
 		if(validar()) {
+			//cogemos todos los datos para luego cambiarlos 
 			Actor actt = new Actor();
 			actt.setNombre(textNombre.getText());
 			actt.setFechaNac(LocalDate.parse(textFecha.getText()));
@@ -193,9 +216,10 @@ public class AltaActor extends JDialog implements ActionListener{
 			
 			dao.modiActor(dni, actt);
 			limpiar();
+			
 			JOptionPane.showMessageDialog(null, "Actor modificado correctamente","Modificado",JOptionPane.INFORMATION_MESSAGE);
 		}else {
-			JOptionPane.showMessageDialog(null, "No puedes dejar parametros vacios", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error al introducir datos", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		
@@ -204,16 +228,17 @@ public class AltaActor extends JDialog implements ActionListener{
 		// TODO Auto-generated method stub
 		
 		DateTimeFormatter formateador= DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		if(validar()) {
-			
-		Actor act = new Actor();
-		act.setDni(textDNI.getText());
-		act.setNombre(textNombre.getText());
-		act.setFechaNac(LocalDate.parse(textFecha.getText(), formateador));
-		act.setCiudadNac(textLugar.getText());
-		dao.altaActor(act);
 		
-		limpiar();
+		if(validar()) {
+			//pasamos lo que ha escrito para hacer el alta
+			Actor act = new Actor();
+			act.setDni(textDNI.getText());
+			act.setNombre(textNombre.getText());
+			act.setFechaNac(LocalDate.parse(textFecha.getText(), formateador));
+			act.setCiudadNac(textLugar.getText());
+			dao.altaActor(act);
+		
+			limpiar();
 		
 		}else {
 			JOptionPane.showMessageDialog(null, "No puedes dejar parametros vacios", "Error", JOptionPane.ERROR_MESSAGE);
@@ -222,7 +247,7 @@ public class AltaActor extends JDialog implements ActionListener{
 	
 
 	public void CargarActor(Actor act) {
-		
+		//Al entrar por consulta muestra los datos de seleccionado 
 		textDNI.setText(act.getDni());
 		textNombre.setText(act.getNombre());
 		textFecha.setText(act.getFechaNac().toString());
@@ -238,6 +263,7 @@ public class AltaActor extends JDialog implements ActionListener{
 	
 	private void limpiar() {
 		// TODO Auto-generated method stub
+		//limpia los datos, pone todo a blanco
 		textDNI.setText(null);
 		textNombre.setText(null);
 		textLugar.setText(null);

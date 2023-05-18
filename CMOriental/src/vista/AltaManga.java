@@ -10,12 +10,25 @@ import javax.swing.border.EmptyBorder;
 
 import modelo.Dao;
 import modelo.DaoImplementacion;
+import clases.Autor;
+import clases.ContenidoMultimedia;
+import clases.Editorial;
+import clases.Estudio;
 import clases.Manga;
+import clases.Proveedor;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 
@@ -37,6 +50,9 @@ public class AltaManga extends JDialog implements ActionListener{
 	private JButton btnBaja ;
 	private JButton btnVolver;
 	private Manga manga;
+	private JComboBox comboAutor ;
+	private JComboBox comboEditorial;
+	private JComboBox comboEstado;
 	/**
 	 * Launch the application.
 	 */
@@ -45,13 +61,16 @@ public class AltaManga extends JDialog implements ActionListener{
 	 * Create the dialog.
 	 * @param b 
 	 * @param dao 
+	 * @param com 
+	 * @param au 
+	 * @param ed 
 	 * @param admin 
 	 */
-	public AltaManga(boolean b, Dao dao, Manga man) {
-	
+	public AltaManga(boolean b, Dao dao, Manga man, ContenidoMultimedia com, Autor au, Editorial ed) {
+		
 		this.dao=dao;
 		this.setModal(b);
-		manga=man;
+		this.manga=man;
 		getContentPane().setLayout(null);
 		
 		JLabel lblAnime = new JLabel("MANGA");
@@ -123,6 +142,7 @@ public class AltaManga extends JDialog implements ActionListener{
 		textCodigo.setBounds(123, 71, 279, 20);
 		contentPanel.add(textCodigo);
 		textCodigo.setColumns(10);
+		textCodigo.setToolTipText("Codigo de 4 numeros");
 		
 		textTitulo = new JTextField();
 		textTitulo.setColumns(10);
@@ -138,10 +158,12 @@ public class AltaManga extends JDialog implements ActionListener{
 		textPuntuacion.setColumns(10);
 		textPuntuacion.setBounds(123, 304, 279, 20);
 		contentPanel.add(textPuntuacion);
+		textPuntuacion.setToolTipText("Puntua entre 0-10");
 		
 		textISBN = new JTextField();
 		textISBN.setColumns(10);
 		textISBN.setBounds(123, 339, 279, 20);
+		textISBN.setToolTipText("ISBN de 13 numeros");
 		contentPanel.add(textISBN);
 		
 		textTomos = new JTextField();
@@ -153,13 +175,20 @@ public class AltaManga extends JDialog implements ActionListener{
 		textPeriozidad.setColumns(10);
 		textPeriozidad.setBounds(123, 443, 279, 20);
 		contentPanel.add(textPeriozidad);
+		textPeriozidad.setToolTipText("Cada cuanto tiempo sale ");
 		
-		JComboBox comboEstado = new JComboBox();
-		comboEstado.setModel(new DefaultComboBoxModel(new String[] {"", "Proximamente", "En emision", "Finalizado"}));
+		comboEstado = new JComboBox();
+		comboEstado.addItem("Proximamente");
+		comboEstado.addItem("En emision");
+		comboEstado.addItem("Finalizado");
+		comboEstado.setSelectedIndex(-1);
+		
+		
+		
 		comboEstado.setBounds(123, 260, 279, 22);
 		contentPanel.add(comboEstado);
 		
-		JComboBox comboAutor = new JComboBox();
+		comboAutor = new JComboBox();
 		comboAutor.setBounds(123, 168, 279, 22);
 		contentPanel.add(comboAutor);
 		
@@ -183,7 +212,7 @@ public class AltaManga extends JDialog implements ActionListener{
 		btnVolver.addActionListener(this);
 		contentPanel.add(btnVolver);
 		
-		JComboBox comboEditorial = new JComboBox();
+		comboEditorial = new JComboBox();
 		comboEditorial.setBounds(123, 408, 279, 22);
 		contentPanel.add(comboEditorial);
 		
@@ -197,27 +226,46 @@ public class AltaManga extends JDialog implements ActionListener{
 		lblStock.setBounds(10, 507, 86, 23);
 		contentPanel.add(lblStock);
 		
-		JLabel lblProveedor = new JLabel("Proveedor");
-		lblProveedor.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		lblProveedor.setBounds(10, 541, 86, 23);
-		contentPanel.add(lblProveedor);
-		
-		JComboBox comboProveedor = new JComboBox();
-		comboProveedor.setBounds(123, 550, 279, 22);
-		contentPanel.add(comboProveedor);
-		
 		textStock = new JTextField();
 		textStock.setColumns(10);
 		textStock.setBounds(123, 508, 279, 20);
 		contentPanel.add(textStock);
 		
-		if(manga==null) {
+		cargarComboAutor(manga,com);
+		cargarComboEditorial(manga,com);
+		
+		if(manga==null || com==null) {
 			btnBaja.setEnabled(false);
 			btnModi.setEnabled(false);
 		}else {
-			btnAlta.enable(false);
+			btnAlta.setEnabled(false);
+			textCodigo.enable(false);
+			cargarMangas(manga,com, au, ed);
+		
 		}
 		
+	
+		
+	}
+
+	
+	 
+
+	private void cargarMangas(Manga manga, ContenidoMultimedia com, Autor au, Editorial ed) {
+		// TODO Auto-generated method stub
+		//Cargar el manga que has seleccionado al entrar por la vista de consultaManga
+		textCodigo.setText(Integer.toString(com.getCodigo()));
+		textISBN.setText(Integer.toString(manga.getIsbn()));
+		textAño.setText(Integer.toString(com.getAñoInicio()));
+		textPeriozidad.setText(manga.getPeriodicidad());
+		textPrecio.setText(Float.toString(manga.getPrecio()));
+		textPuntuacion.setText(Float.toString(com.getPuntuacion()));
+		textStock.setText(Integer.toString(manga.getStock()));
+		textTitulo.setText(com.getTitulo());
+		textTomos.setText(Integer.toString(manga.getNumTomos()));
+		comboEditorial.setSelectedItem(ed.getID_Editorial()+" | " +ed.getNombre());
+		comboAutor.setSelectedItem(au.getDni() + " | " + au.getNombre());
+		comboEstado.setSelectedItem(com.getEstado());
 		
 		
 	}
@@ -228,34 +276,212 @@ public class AltaManga extends JDialog implements ActionListener{
 		if(e.getSource().equals(btnAlta)) {
 			darAlta();
 		}
+		if(e.getSource().equals(btnBaja)) {
+			baja(manga);
+		}
+		if(e.getSource().equals(btnModi)) {
+			modificado(manga);
+		}
 		if(e.getSource().equals(btnVolver)) {
 			volver();
 		}
 	}
 	
-	private void cerrar() {
-		this.dispose();
-	}
-
-	private void volver() {
-		cerrar();
-		dao = new DaoImplementacion();
-		Admin ad = new Admin(dao);
-		ad.setVisible(true);
+	private String cogerAutor() {
+		// coger la opcion seleccionada del combobox
+		String dni;
+		int donde;
+			dni = (String) comboAutor.getSelectedItem();
+			donde = dni.indexOf(" ");
+			String au = dni.substring(0, donde);
+			return au;
 	}
 	
+	private String cogerEditorial() {
+		String cadena;
+		int donde;
+		// coger la opcion seleccionada del combox
+			cadena = (String) comboEditorial.getSelectedItem();
+			donde = cadena.indexOf(" ");
+			String id = cadena.substring(0, donde);
+			return id;
+	}
+	
+	private void modificado(Manga manga2) {
+		// TODO Auto-generated method stub
+		int cod = manga.getCodigo();
+		Manga man = new Manga();
+
+
+		
+		if (validar()) {
+			
+			man.setCodigo(Integer.parseInt(textCodigo.getText()));
+			man.setTitulo(textTitulo.getText());
+			man.setPuntuacion(Float.parseFloat(textPuntuacion.getText()));
+			man.setIsbn(Integer.parseInt(textISBN.getText()));
+			man.setPeriodicidad(textPeriozidad.getText());
+			man.setNumTomos(Integer.parseInt(textTomos.getText()));
+			man.setPrecio(Float.parseFloat(textPrecio.getText()));
+			man.setStock(Integer.parseInt(textStock.getText()));
+			man.setAñoInicio(Integer.parseInt(textAño.getText()));
+
+			man.setAutor(cogerAutor());
+
+			man.setEstado(comboEstado.getSelectedItem().toString());
+			man.setEditorial(cogerEditorial());
+
+			if (dao.modManga(cod, man)) {
+				JOptionPane.showMessageDialog(this, "Modificacion CORRECTO");
+				limpiar();
+				volver();
+			} else {
+				JOptionPane.showMessageDialog(null, "Modificacion INCORRECTO", "Error", JOptionPane.ERROR_MESSAGE);
+				volver();
+			}
+		} else {
+
+			JOptionPane.showMessageDialog(null, "Error, Comprueba los datos ", "Error de modificacion", JOptionPane.ERROR_MESSAGE);
+		}
+	
+
+	}
+
+	private void baja(Manga manga) {
+		// TODO Auto-generated method stub
+		int cod = manga.getCodigo();
+		if(dao.borradoManga(cod)) {
+			JOptionPane.showMessageDialog(this, "BAJA CORRECTA");
+			
+			
+		}else {
+			JOptionPane.showMessageDialog(null, "Error, Baja Incorrecta", "Baja", JOptionPane.ERROR_MESSAGE);
+		}
+		volver();
+		
+	}
+
 	private void darAlta() {
 		// TODO Auto-generated method stub
-		/*Manga man = new Manga();
-		man.setCodigo(textCodigo.getText());
-		man.setTitulo(textTitulo.getText());
-		man.setAñoInicio(null);
-		man.setPuntuacion(textPuntuacion.get);
-		man.setIsbn(textISBN);
-		man.setPeriodicidad(textPeriozidad.getText());
-		man.setNumTomos(textTomos);
-		man.setPrecio(textPrecio);
-		man.setStock(textStock);*/
+
+		Manga man = new Manga();
+
+
+		if (validar()) {
+			//en un Obejo manga pasamos los datos introducidos al dao
+			man.setCodigo(Integer.parseInt(textCodigo.getText()));
+			man.setTitulo(textTitulo.getText());
+			man.setPuntuacion(Float.parseFloat(textPuntuacion.getText()));
+			man.setIsbn(Integer.parseInt(textISBN.getText()));
+			man.setPeriodicidad(textPeriozidad.getText());
+			man.setNumTomos(Integer.parseInt(textTomos.getText()));
+			man.setPrecio(Float.parseFloat(textPrecio.getText()));
+			man.setStock(Integer.parseInt(textStock.getText()));
+			man.setAñoInicio(Integer.parseInt(textAño.getText()));
+
+			man.setAutor(cogerAutor());
+
+			man.setEstado(comboEstado.getSelectedItem().toString());
+			man.setEditorial(cogerEditorial());
+
+			if (dao.altaManga(man)) {
+				JOptionPane.showMessageDialog(this, "ALTA CORRECTO");
+				limpiar();
+			}
+
+		} else {
+			
+			JOptionPane.showMessageDialog(null, "Error en algun parametro, Alta incorrecta", "Error Alta", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+
+	private void cargarComboAutor(Manga man, ContenidoMultimedia com) {
+		String au;
+		ArrayList<Autor> aut = dao.getAutor();
+		int fila;
+		//rellena la combobox con los datos de los autores
+			for (int i = 0; i < aut.size(); i++) {
+				comboAutor.addItem(aut.get(i).getDni() + " | " + aut.get(i).getNombre());
+				
+			}
+			
+			
+				comboAutor.setSelectedIndex(-1);
+			
+	}
+	
+	
+	private void cargarComboEditorial(Manga man, ContenidoMultimedia com) {
+		Dao dao = new DaoImplementacion();
+		ArrayList<Editorial> ed = dao.getEditorial();
+		int fila;
+		//Hace que el comboBox de WEditorial tenga las opciones de las Editoriales
+		for (int i = 0; i < ed.size(); i++) {
+			comboEditorial.addItem(ed.get(i).getID_Editorial()+" | " +ed.get(i).getNombre());
+		}
+			comboEditorial.setSelectedIndex(-1);
 		
+		
+	}
+	
+	
+
+	private void volver() {
+		this.dispose();
+	}
+	
+	private  boolean validar() {
+		boolean bien=true;
+		String letraMayus = "";
+		//mirar que no hay datos vacios
+		if(textCodigo.getText().equalsIgnoreCase(null) || textAño.getText().equalsIgnoreCase(null) || textISBN.getText().equalsIgnoreCase(null) || textPeriozidad.getText().equalsIgnoreCase(null)
+			|| textPrecio.getText().equalsIgnoreCase(null) || textPuntuacion.getText().equalsIgnoreCase(null) || textStock.getText().equalsIgnoreCase(null) || textTitulo.getText().equalsIgnoreCase(null) || textTomos.getText().equalsIgnoreCase(null)
+			|| comboEditorial.getSelectedIndex() ==-1 || comboAutor.getSelectedIndex() ==-1 || comboEstado.getSelectedIndex() ==-1) {
+			
+			bien = false;
+			
+			
+		}else {
+			//comprobar que el codigo es de 4 numeros
+			Pattern pat = Pattern.compile("[0-9]{4}");
+			Matcher mat = pat.matcher(textCodigo.getText());
+			if(!mat.matches()) {
+				bien=false;
+			}
+			/*
+			 * Pattern pa = Pattern.compile("[0-9]{13}"); Matcher ma =
+			 * pa.matcher(textISBN.getText()); if(!ma.matches()) { bien=false; }
+			 */
+			
+			//mirar que la puntuacion este entr 0-10
+			if(Float.parseFloat(textPuntuacion.getText()) < 0 || Float.parseFloat(textPuntuacion.getText()) > 10) {
+				bien=false;
+			}
+			
+			
+		}
+		
+		
+		return bien;
+	}
+	
+	
+	private void limpiar() {
+		// TODO Auto-generated method stub
+		//Psar los datos a nulos 
+		
+		textCodigo.setText(null);
+		textISBN.setText(null);
+		textAño.setText(null);
+		textPeriozidad.setText(null);
+		textPrecio.setText(null);
+		textPuntuacion.setText(null);
+		textStock.setText(null);
+		textTitulo.setText(null);
+		textTomos.setText(null);
+		comboAutor.setSelectedIndex(-1);
+		comboEditorial.setSelectedIndex(-1);
+		comboEstado.setSelectedIndex(-1);
 	}
 }

@@ -28,6 +28,9 @@ public class Admin extends JDialog implements ActionListener{
 	private JButton btnModborActor;
 	private JButton btnAltaEstudio;
 	private JButton btnModborEstudio;
+	private JButton btnAltaAutor;
+	private JButton btnAutor;
+	private JButton btnAltaAnime;
 	/**
 	 * Launch the application.
 	 */
@@ -49,12 +52,9 @@ public class Admin extends JDialog implements ActionListener{
 		lblAdmin.setBounds(10, 0, 100, 33);
 		getContentPane().add(lblAdmin);
 		
-		JButton btnAltaAnime = new JButton("Alta Anime");
+		btnAltaAnime = new JButton("Alta Anime");
 		btnAltaAnime.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		btnAltaAnime.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnAltaAnime.addActionListener(this);
 		btnAltaAnime.setBounds(10, 59, 158, 44);
 		getContentPane().add(btnAltaAnime);
 		
@@ -70,9 +70,10 @@ public class Admin extends JDialog implements ActionListener{
 		btnAltaActor.addActionListener(this);
 		getContentPane().add(btnAltaActor);
 		
-		JButton btnAltaAutor = new JButton("Alta Autor");
+		btnAltaAutor = new JButton("Alta Autor");
 		btnAltaAutor.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		btnAltaAutor.setBounds(10, 276, 158, 44);
+		btnAltaAutor.addActionListener(this);
 		getContentPane().add(btnAltaAutor);
 		
 		btnAltaProveedor = new JButton("Alta Proveedor");
@@ -84,6 +85,7 @@ public class Admin extends JDialog implements ActionListener{
 		btnModborAnime = new JButton("Mod/Bor Anime");
 		btnModborAnime.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		btnModborAnime.setBounds(246, 59, 195, 44);
+		btnModborAnime.addActionListener(this);
 		getContentPane().add(btnModborAnime);
 		
 		btnModborManga = new JButton("Mod/Bor Manga");
@@ -101,6 +103,7 @@ public class Admin extends JDialog implements ActionListener{
 		btnModborEstudio = new JButton("Mod/Bor Estudio");
 		btnModborEstudio.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
 		btnModborEstudio.setBounds(246, 349, 195, 44);
+		btnModborEstudio.addActionListener(this);
 		getContentPane().add(btnModborEstudio);
 		
 		btnModborProveedor = new JButton("Mod/Bor Proveedor");
@@ -115,11 +118,11 @@ public class Admin extends JDialog implements ActionListener{
 		btnAltaEstudio.addActionListener(this);
 		getContentPane().add(btnAltaEstudio);
 		
-		JButton btnAltaAnime_8_1 = new JButton("Mod/Bor Autor");
-		btnAltaAnime_8_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
-		btnAltaAnime_8_1.setBounds(246, 276, 195, 44);
-		btnModborEstudio.addActionListener(this);
-		getContentPane().add(btnAltaAnime_8_1);
+		btnAutor = new JButton("Mod/Bor Autor");
+		btnAutor.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+		btnAutor.setBounds(246, 276, 195, 44);
+		btnAutor.addActionListener(this);
+		getContentPane().add(btnAutor);
 		
 	}
 
@@ -137,11 +140,11 @@ public class Admin extends JDialog implements ActionListener{
 			
 		}
 		if(e.getSource().equals(btnAltaManga)) {
-			AltaManga  altm = new AltaManga(true, dao, null);
+			AltaManga  altm = new AltaManga(true, dao, null,null,null,null);
 			altm.setVisible(true);
 		}
 		if(e.getSource().equals(btnModborManga)) {
-			ConsltaManga man = new ConsltaManga(true,dao);
+			ConsltaManga man = new ConsltaManga(this,dao);
 			man.setVisible(true);
 		}
 		if(e.getSource().equals(btnAltaActor)) {
@@ -160,7 +163,22 @@ public class Admin extends JDialog implements ActionListener{
 			ConsltaEstudio conEst = new ConsltaEstudio(dao);
 			conEst.setVisible(true);
 		}
-		
+		if(e.getSource().equals(btnAltaAutor)) {
+			AltaAutor alt = new AltaAutor(true,dao,null);
+			alt.setVisible(true);
+		}
+		if(e.getSource().equals(btnAutor)) {
+			ConsltaAutor aut = new  ConsltaAutor(dao);
+			aut.setVisible(true);
+		}
+		if(e.getSource().equals(btnAltaAnime)) {
+			AltaAnime altAni = new AltaAnime(true, dao, null, null, null);
+			altAni.setVisible(true);
+		}
+		if(e.getSource().equals(btnModborAnime)) {
+			ConsltaAnime conAni = new ConsltaAnime(null, dao);
+			conAni.setVisible(true);
+		}
 	}
 	
 }

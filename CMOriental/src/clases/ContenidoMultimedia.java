@@ -8,17 +8,17 @@ import utilidades.Utilidades;
 public class ContenidoMultimedia{
 
 	//atributos
-	private String codigo;
+	private int codigo;
 	private String titulo;
-	private Autor autor;
-	private LocalDate añoInicio;
-	private Estado estado;
+	private String autor;
+	private int añoInicio;
+	private String estado;
 	private float puntuacion;
 	//get &set
-	public String getCodigo() {
+	public int getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(String codigo) {
+	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 	public String getTitulo() {
@@ -27,22 +27,22 @@ public class ContenidoMultimedia{
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	public Autor getAutor() {
+	public String getAutor() {
 		return autor;
 	}
-	public void setAutor(Autor autor) {
+	public void setAutor(String autor) {
 		this.autor = autor;
 	}
-	public LocalDate getAñoInicio() {
+	public int getAñoInicio() {
 		return añoInicio;
 	}
-	public void setAñoInicio(LocalDate añoInicio) {
+	public void setAñoInicio(int añoInicio) {
 		this.añoInicio = añoInicio;
 	}
-	public Estado getEstado() {
+	public String getEstado() {
 		return estado;
 	}
-	public void setEstado(Estado estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 	public float getPuntuacion() {

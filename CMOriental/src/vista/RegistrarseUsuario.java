@@ -12,6 +12,8 @@ import modelo.Dao;
 import clases.Usuarios;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +21,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import java.awt.Color;
 
 public class RegistrarseUsuario extends JDialog implements ActionListener{
 
@@ -51,6 +56,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		
 		setBounds(100, 100, 461, 413);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(240, 240, 240));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
@@ -67,6 +73,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		
 		tIntroNombre = new JTextField();
 		tIntroNombre.setBounds(164, 134, 201, 20);
+		tIntroNombre.setToolTipText("Introduce tu nombre");
 		contentPanel.add(tIntroNombre);
 		tIntroNombre.setColumns(10);
 		
@@ -79,6 +86,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		tIntroEmal.setColumns(10);
 		tIntroEmal.setBounds(164, 83, 201, 20);
 		contentPanel.add(tIntroEmal);
+		tIntroEmal.setToolTipText("Introduce un email valido");
 		
 		JLabel lblNewLabel_1_1_1 = new JLabel("Apellido :");
 		lblNewLabel_1_1_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -88,6 +96,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		tIntroApellido = new JTextField();
 		tIntroApellido.setColumns(10);
 		tIntroApellido.setBounds(164, 182, 201, 20);
+		tIntroApellido.setToolTipText("Introduce tu apellido");
 		contentPanel.add(tIntroApellido);
 		
 		JLabel lblNewLabel_1_1_1_1 = new JLabel("Nombre Usuario :");
@@ -98,6 +107,7 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		tIntroNombreU = new JTextField();
 		tIntroNombreU.setColumns(10);
 		tIntroNombreU.setBounds(163, 229, 201, 20);
+		tIntroNombreU.setToolTipText("Introduce tu nombre como usuario");
 		contentPanel.add(tIntroNombreU);
 		
 		JLabel lblNewLabel_1_1_1_1_1 = new JLabel("Contrase\u00F1a :");
@@ -124,16 +134,6 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 	}
 	
 		
-		private String  generarCodigo() {
-			// TODO Auto-generated method stub
-			
-		    int i = 0;
-			i++;
-			String codigo=String.format("%04d",i);
-			
-			return codigo;
-			
-		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -155,20 +155,57 @@ public class RegistrarseUsuario extends JDialog implements ActionListener{
 		}
 		private void registroUsuario() {
 			// TODO Auto-generated method stub
+			
+			
 			Usuarios usu;
 			usu = new Usuarios();
 			
+			if(validar()) {
+				
 			
 			usu.setEmail(tIntroEmal.getText());
 			usu.setNombre(tIntroNombre.getText());
 			usu.setApellido(tIntroApellido.getText());
 			usu.setContraseña(tIntroContraseña.getText());
 			
+			//Pasamos los datos y al registrar se abre la vista de Iniciar sesion
 			dao.altaUsuario(usu);
+			JOptionPane.showMessageDialog(null, "Registrado","Registro",JOptionPane.INFORMATION_MESSAGE);
+			IniciarSesion ins = new IniciarSesion(null, true, dao);
+			this.dispose();
+			ins.setVisible(true);
+			
+			
+			}else {
+				JOptionPane.showMessageDialog(null, "Error al registrarse", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			
 			limpiar();
 		}
-
+  
+		private  boolean validar() {
+			boolean bien=true;
+			String letraMayus = "";
+			if(tIntroEmal.getText().equalsIgnoreCase(null) || tIntroNombre.getText().equalsIgnoreCase(null) || tIntroNombreU.getText().equalsIgnoreCase(null) || tIntroApellido.getText().equalsIgnoreCase(null) || tIntroContraseña.getText().equalsIgnoreCase(null)) {
+				bien = false;
+				
+			}else {
+				//Comprueba el email mira si tiene un @ y mas tarde un . 
+				Pattern pattern = Pattern
+		                .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+				
+				Matcher mat = pattern.matcher(tIntroEmal.getText());
+				if(!mat.matches()) {
+					bien=false;
+				}
+				
+				
+			}
+			
+			
+			return bien;
+		}
 
 		private void limpiar() {
 			// TODO Auto-generated method stub

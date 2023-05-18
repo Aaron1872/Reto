@@ -118,18 +118,19 @@ public class IniciarSesion extends JDialog implements ActionListener{
 		String nombre = textNomUsuario.getText();
 		String contraseña = textContraseña.getText();
 		boolean admin=false;
-
+		int cod = dao.consultaUsuario(nombre, contraseña);
 		
-		if (dao.consultaUsuario(nombre, contraseña) && nombre.equalsIgnoreCase("Admin")) {
+		if (dao.consultaUsuario(nombre, contraseña)>0 && nombre.equalsIgnoreCase("Admin")) {
 			dispose();
 			JOptionPane.showMessageDialog(null, "Bienvenido al Sistema","Ingresaste como administrador",JOptionPane.INFORMATION_MESSAGE);
 			Admin a = new Admin(dao);
 			a.setVisible(true);
-		}else if(dao.consultaUsuario(nombre, contraseña)) {
+		}else if(dao.consultaUsuario(nombre, contraseña)>0) {
 			dispose();
 			JOptionPane.showMessageDialog(null, "Bienvenido al Sistema","Ingresaste como usuario",JOptionPane.INFORMATION_MESSAGE);
-			Usuario u = new Usuario(dao);
+			Usuario u = new Usuario(dao,cod);
 			u.setVisible(true);
+			
 		}else {
 			JOptionPane.showMessageDialog(null, "Usuario o Contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			textNomUsuario.setText("");

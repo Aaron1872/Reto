@@ -8,8 +8,9 @@ public class Anime extends ContenidoMultimedia{
 	private String tipoAnime;
 	private int capitulos;
 	private int temporadas;
-	private Estudio estudio;
+	private String estudio;
 	private ArrayList<Autor> autores;
+
 	
 	//get Y set
 	public String getTipoAnime() {
@@ -36,10 +37,16 @@ public class Anime extends ContenidoMultimedia{
 	public final void setAutores(ArrayList<Autor> autores) {
 		this.autores = autores;
 	}
-	public final Estudio getEstudio() {
+	public final String getEstudio() {
 		return estudio;
 	}
-	public final void setEstudio(Estudio estudio) {
+	public final void setEstudio(String estudio) {
 		this.estudio = estudio;
 	}
+
+	
+	
+	
+	
+	
 }

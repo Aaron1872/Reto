@@ -20,6 +20,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -87,16 +89,19 @@ public class AltaProveedor extends JDialog implements ActionListener{
 		textNif = new JTextField();
 		textNif.setBounds(56, 48, 309, 20);
 		contentPanel.add(textNif);
+		textNif.setToolTipText("Un NIF de 8 numeros 1 letra ");
 		textNif.setColumns(10);
 		
 		textNombre = new JTextField();
 		textNombre.setColumns(10);
 		textNombre.setBounds(78, 88, 287, 20);
+		textNombre.setToolTipText("Introduce el nombre del proveedor");
 		contentPanel.add(textNombre);
 		
 		textLugar = new JTextField();
 		textLugar.setColumns(10);
 		textLugar.setBounds(88, 128, 277, 20);
+		textLugar.setToolTipText("Donde esta el proveedor");
 		contentPanel.add(textLugar);
 		{
 			btnVolver = new JButton("Volver");
@@ -173,8 +178,8 @@ public class AltaProveedor extends JDialog implements ActionListener{
 			
 			dao.modificarProveedor(modnif, prov);
 			limpiar();
-			
-			
+			volver();
+			JOptionPane.showMessageDialog(null, "Proveedor modificado correctamente","Borrado",JOptionPane.INFORMATION_MESSAGE);
 		}
 		
 		
@@ -190,16 +195,6 @@ public class AltaProveedor extends JDialog implements ActionListener{
 		limpiar();
 		JOptionPane.showMessageDialog(null, "Proveedor borrado correctamente","Borrado",JOptionPane.INFORMATION_MESSAGE);
 		volver();
-	}
-	public boolean validar() {
-		boolean bien=false;
-		if(textNombre.getText().equalsIgnoreCase(null) && textLugar.getText().equalsIgnoreCase(null) && textNif.getText().equalsIgnoreCase(null)) {
-			
-		}else {
-			bien=true;
-		}
-		return bien;
-		
 	}
 
 	private void AltaPro() {
@@ -231,16 +226,10 @@ public class AltaProveedor extends JDialog implements ActionListener{
 		textLugar.setText(null);
 	}
 
-	private void cerrar() {
+	private void volver() {
 		this.dispose();
 	}
 
-	private void volver() {
-		cerrar();
-		dao = new DaoImplementacion();
-		Admin ad = new Admin(dao);
-		ad.setVisible(true);
-	}
 	
 	public void CargarProvedior(Proveedor pro) {
 		textNombre.setText(pro.getNombre());
@@ -248,6 +237,29 @@ public class AltaProveedor extends JDialog implements ActionListener{
 		textLugar.setText(pro.getUbicacion());
 		
 		
+	}
+	
+	
+	private  boolean validar() {
+		boolean bien=true;
+		String letraMayus = "";
+		if(textNif.getText().equalsIgnoreCase(null) || textNombre.getText().equalsIgnoreCase(null) || textLugar.getText().equalsIgnoreCase(null) ) {
+			bien = false;
+			
+			
+		}else {
+			Pattern pat = Pattern.compile("[0-9]{8,9}[A-Z]");
+			Matcher mat = pat.matcher(textNif.getText());
+			
+			if(!mat.matches()) {
+				bien=false;
+			}
+			
+			
+		}
+		
+		
+		return bien;
 	}
 	
 }
